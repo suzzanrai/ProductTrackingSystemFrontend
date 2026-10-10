@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Fonts: bundled (no Google Fonts). Only the weights DESIGN.md uses.
+   ========================================================================== */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/noto-sans-devanagari/400.css";
+@import "@fontsource/noto-sans-devanagari/500.css";
+@import "@fontsource/noto-sans-devanagari/600.css";
+
+/* ==========================================================================
+   LAYER 1: Design tokens (DESIGN.md section 12 + the tokens it implies)
+   Plain CSS variables. Change a value here and the whole app follows.
+   ========================================================================== */
+:root {
+  /* Primary */
+  --primary: #2f7d4f;
+  --primary-dark: #1f5a38;
+  --primary-light: #e6f2ea;
+
+  /* Accent: highlight only, max 10% of a screen */
+  --accent: #e0a030;
+  --accent-text: #3b2a06;
+
+  /* Neutral */
+  --text: #1c2420;
+  --text-muted: #5b6760;
+  --border: #d9dfdb;
+  --background: #f4f7f5;
+  --surface: #ffffff;
+
+  /* Status: solid, badge background, badge text */
+  --draft: #6b7570;
+  --draft-bg: #ecefed;
+  --draft-text: #444c47;
+
+  --info: #2563a8;
+  --info-bg: #e3eef9;
+  --info-text: #174a7e;
+
+  --success: #1e8e4e;
+  --success-bg: #e3f4ea;
+  --success-text: #14663a;
+
+  --warning: #e09f1f;
+  --warning-bg: #fbf0d9;
+  --warning-text: #7a4e06;
+
+  --danger: #c93c3c;
+  --danger-bg: #fbe6e6;
+  --danger-text: #8f2222;
+
+  /* Shape */
+  --radius: 8px; /* buttons, inputs, badges, menus */
+  --radius-card: 12px; /* cards, tables, dialogs */
+
+  /* Elevation: floating layers only (dropdown, dialog) */
+  --shadow-floating: 0 4px 16px rgb(28 36 32 / 0.12);
+
+  /* Spacing (8-point grid). Tailwind p-1 = 4px, p-2 = 8px, p-4 = 16px,
+     p-6 = 24px, p-8 = 32px, p-12 = 48px, p-16 = 64px. */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-6: 48px;
+
+  /* Typography */
+  --font: Inter, "Noto Sans Devanagari", sans-serif;
+  --size-title: 28px;
+  --size-heading: 20px;
+  --size-body: 16px;
+  --size-small: 14px;
+  --line: 1.4;
+
+  /* Layout */
+  --target: 48px; /* button and input height, minimum touch target */
+  --sidebar-width: 256px;
+  --content-max: 1440px;
+}
+
+/* ==========================================================================
+   LAYER 2: Tailwind theme. Removes Tailwind's defaults so ONLY the
+   DESIGN.md tokens exist, then maps each token to a class name.
+   ========================================================================== */
+@theme {
+  --color-*: initial;
+  --text-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --breakpoint-*: initial;
+
+  /* Font */
+  --font-sans: var(--font);
+
+  /* Text sizes: text-title, text-heading, text-body, text-small */
+  --text-title: var(--size-title);
+  --text-title--line-height: var(--line);
+  --text-heading: var(--size-heading);
+  --text-heading--line-height: var(--line);
+  --text-body: var(--size-body);
+  --text-body--line-height: var(--line);
+  --text-small: var(--size-small);
+  --text-small--line-height: var(--line);
+
+  /* Colors: primary */
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-light: var(--primary-light);
+
+  /* Colors: accent */
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+
+  /* Colors: neutral */
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-white: #ffffff;
+
+  /* Colors: status */
+  --color-draft: var(--draft);
+  --color-draft-bg: var(--draft-bg);
+  --color-draft-text: var(--draft-text);
+
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-info-text: var(--info-text);
+
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-success-text: var(--success-text);
+
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-text: var(--warning-text);
+
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-danger-text: var(--danger-text);
+
+  /* Radius: rounded-control (8px), rounded-card (12px). rounded-full stays. */
+  --radius-control: var(--radius);
+  --radius-card: var(--radius-card);
+
+  /* Shadow: shadow-floating */
+  --shadow-floating: var(--shadow-floating);
+
+  /* Breakpoints: below 600 compact, 600-1023 medium, 1024+ large */
+  --breakpoint-md: 600px;
+  --breakpoint-lg: 1024px;
+
+  /* Sizes: h-control, min-h-control, w-sidebar, max-w-content */
+  --spacing-control: var(--target);
+  --spacing-sidebar: var(--sidebar-width);
+  --container-content: var(--content-max);
+}
+
+/* ==========================================================================
+   LAYER 3: Base styles
+   ========================================================================== */
+@layer base {
+  body {
+    font-family: var(--font);
+    font-size: var(--size-body);
+    line-height: var(--line);
+    color: var(--text);
+    background-color: var(--background);
+  }
+
+  /* Every `border` class uses the DESIGN.md border color by default */
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
+  /* Visible focus on every control: 2px primary outline, 2px offset */
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
