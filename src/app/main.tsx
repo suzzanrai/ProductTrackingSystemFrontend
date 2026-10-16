@@ -4,6 +4,7 @@ import { RouterProvider } from "@tanstack/react-router";
 
 import "./styles/index.css";
 import "@shared/config"; // checks the env variables at startup
+import "@shared/i18n"; // starts the translation system
 import { QueryProvider } from "@providers/QueryProvider";
 import { router } from "./router";
 
