@@ -1,0 +1,21 @@
+export const enLogin = {
+  login: {
+    title: "Log in",
+    subtitle: "Enter your credentials to access your supply dashboard.",
+    identifierLabel: "Email or contact number",
+    identifierPlaceholder: "name@tracenepal.org or +977 98XXXXXXXX",
+    identifierRequired: "Enter your email or contact number.",
+    passwordLabel: "Password",
+    passwordRequired: "Enter your password.",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
+    errorInvalid: "Email or password is incorrect. Check and try again.",
+    rememberMe: "Remember me",
+    forgotPassword: "Forgot password?",
+    submit: "Log in",
+    newHere: "New here?",
+    register: "Create an account",
+    securityBadge: "256-bit Ledger Auth",
+    versionBadge: "v2.4.1 Production",
+  },
+};
