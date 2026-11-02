@@ -26,6 +26,22 @@ import { LanguageToggle } from "@shared/ui";
 const inputClass =
   "h-control w-full rounded-control border bg-surface px-4 text-body text-text focus:border-primary";
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function firstDetailMessage(
+  details: unknown,
+  key: string,
+): string | undefined {
+  if (!isRecord(details)) return undefined;
+
+  const messages = details[key];
+  return Array.isArray(messages) && typeof messages[0] === "string"
+    ? messages[0]
+    : undefined;
+}
+
 export function RegisterDetailsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -55,6 +71,8 @@ export function RegisterDetailsPage() {
     handleSubmit,
     getValues,
     trigger,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<RegistrationForm>({
     resolver: zodResolver(validationSchema),
@@ -84,15 +102,33 @@ export function RegisterDetailsPage() {
       });
       setSubmissionMessage(t("registrationDetails.registrationSuccess"));
     } catch (error) {
-      const message =
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error &&
-        typeof error.message === "string"
-          ? error.message
-          : t("registrationDetails.registrationFailed");
+      const payload = isRecord(error) ? error : undefined;
+      const apiError =
+        payload && isRecord(payload.error) ? payload.error : undefined;
+      const details = apiError?.details ?? payload?.details;
+      const emailMessage = firstDetailMessage(details, "Email");
+      const contactMessage = firstDetailMessage(details, "Contact");
+
+      if (emailMessage) {
+        setError("email", { type: "server", message: emailMessage });
+      }
+      if (contactMessage) {
+        setError("contactNumber", {
+          type: "server",
+          message: contactMessage,
+        });
+      }
+
+      const apiMessage =
+        (typeof apiError?.message === "string" && apiError.message) ||
+        (typeof payload?.message === "string" && payload.message);
       setSubmissionError(true);
-      setSubmissionMessage(message);
+      setSubmissionMessage(
+        apiMessage ||
+          (emailMessage || contactMessage
+            ? null
+            : t("registrationDetails.registrationFailed")),
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -266,7 +302,9 @@ export function RegisterDetailsPage() {
                         : undefined
                     }
                     className={inputClass}
-                    {...register("contactNumber")}
+                    {...register("contactNumber", {
+                      onChange: () => clearErrors("contactNumber"),
+                    })}
                   />
                   {errors.contactNumber && (
                     <p
@@ -298,7 +336,9 @@ export function RegisterDetailsPage() {
                       errors.email ? "registration-email-error" : undefined
                     }
                     className={inputClass}
-                    {...register("email")}
+                    {...register("email", {
+                      onChange: () => clearErrors("email"),
+                    })}
                   />
                   {errors.email && (
                     <p

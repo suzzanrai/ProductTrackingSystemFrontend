@@ -27,7 +27,7 @@ export interface RoleConfig {
 export const ROLES: readonly RoleConfig[] = [
   { id: "Farmer", icon: Tractor },
   { id: "Collector", icon: Scale },
-  { id: "Factory", icon: Factory },
+  { id: "Factory", icon: Factory }, 
   { id: "Wholesaler", icon: Warehouse },
   { id: "Retailer", icon: Store },
   { id: "Consumer", icon: User },
