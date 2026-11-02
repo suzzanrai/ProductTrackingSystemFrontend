@@ -9,12 +9,12 @@ import {
 } from "lucide-react";
 
 export const ROLE_IDS = [
-  "farmer",
-  "collector",
-  "factory",
-  "wholesaler",
-  "retailer",
-  "consumer",
+  "Farmer",
+  "Collector",
+  "Factory",
+  "Wholesaler",
+  "Retailer",
+  "Consumer",
 ] as const;
 
 export type RoleId = (typeof ROLE_IDS)[number];
@@ -25,12 +25,12 @@ export interface RoleConfig {
 }
 
 export const ROLES: readonly RoleConfig[] = [
-  { id: "farmer", icon: Tractor },
-  { id: "collector", icon: Scale },
-  { id: "factory", icon: Factory },
-  { id: "wholesaler", icon: Warehouse },
-  { id: "retailer", icon: Store },
-  { id: "consumer", icon: User },
+  { id: "Farmer", icon: Tractor },
+  { id: "Collector", icon: Scale },
+  { id: "Factory", icon: Factory },
+  { id: "Wholesaler", icon: Warehouse },
+  { id: "Retailer", icon: Store },
+  { id: "Consumer", icon: User },
 ];
 
-export const DEFAULT_ROLE: RoleId = "farmer";
+export const DEFAULT_ROLE: RoleId = "Farmer";

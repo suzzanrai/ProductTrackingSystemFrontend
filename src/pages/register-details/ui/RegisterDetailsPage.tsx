@@ -1,6 +1,12 @@
-import { useState, type ChangeEvent } from "react";
+import { useMemo, useState, type ChangeEvent } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerUser } from "@features/registration/api/register";
+import {
+  createRegisterSchema,
+  type RegistrationForm,
+} from "@features/registration/model/registerSchema";
 import {
   ArrowLeft,
   Check,
@@ -17,15 +23,6 @@ import { useRegistrationStore } from "@shared/store";
 import { cn } from "@shared/lib";
 import { LanguageToggle } from "@shared/ui";
 
-interface RegistrationForm {
-  englishName: string;
-  nepaliName: string;
-  contactNumber: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
 const inputClass =
   "h-control w-full rounded-control border bg-surface px-4 text-body text-text focus:border-primary";
 
@@ -34,6 +31,15 @@ export function RegisterDetailsPage() {
   const navigate = useNavigate();
   const roleId = useRegistrationStore((state) => state.role);
   const role = ROLES.find((item) => item.id === roleId);
+  const validationSchema = useMemo(
+    () =>
+      createRegisterSchema({
+        required: t("registrationDetails.required"),
+        emailRule: t("registrationDetails.emailRule"),
+        passwordMismatch: t("registrationDetails.passwordMismatch"),
+      }),
+    [t],
+  );
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordValue, setPasswordValue] = useState("");
@@ -41,6 +47,8 @@ export function RegisterDetailsPage() {
   const [submissionMessage, setSubmissionMessage] = useState<string | null>(
     null,
   );
+  const [submissionError, setSubmissionError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -49,6 +57,7 @@ export function RegisterDetailsPage() {
     trigger,
     formState: { errors },
   } = useForm<RegistrationForm>({
+    resolver: zodResolver(validationSchema),
     defaultValues: {
       englishName: "",
       nepaliName: "",
@@ -59,8 +68,34 @@ export function RegisterDetailsPage() {
     },
   });
 
-  function onSubmit() {
-    setSubmissionMessage(t("registrationDetails.formValidNotSubmitted"));
+  async function onSubmit(values: RegistrationForm) {
+    setSubmissionMessage(null);
+    setSubmissionError(false);
+    setIsSubmitting(true);
+
+    try {
+      await registerUser({
+        nameEn: values.englishName,
+        nameNp: values.nepaliName,
+        contact: values.contactNumber,
+        email: values.email,
+        password: values.password,
+        role: roleId,
+      });
+      setSubmissionMessage(t("registrationDetails.registrationSuccess"));
+    } catch (error) {
+      const message =
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error &&
+        typeof error.message === "string"
+          ? error.message
+          : t("registrationDetails.registrationFailed");
+      setSubmissionError(true);
+      setSubmissionMessage(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   const RoleIcon = role?.icon;
@@ -99,7 +134,9 @@ export function RegisterDetailsPage() {
                   </span>
                   <span className="truncate text-body font-semibold text-text">
                     {t("registrationDetails.roleLabel")}{" "}
-                    {role ? t(`roleSelect.roles.${role.id}.title`) : ""}
+                    {role
+                      ? t(`roleSelect.roles.${role.id.toLowerCase()}.title`)
+                      : ""}
                   </span>
                 </div>
                 <button
@@ -123,7 +160,10 @@ export function RegisterDetailsPage() {
               <form
                 noValidate
                 onSubmit={handleSubmit(onSubmit)}
-                onChange={() => setSubmissionMessage(null)}
+                onChange={() => {
+                  setSubmissionMessage(null);
+                  setSubmissionError(false);
+                }}
                 className="flex flex-col gap-5"
               >
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -151,9 +191,7 @@ export function RegisterDetailsPage() {
                           : undefined
                       }
                       className={inputClass}
-                      {...register("englishName", {
-                        required: t("registrationDetails.required"),
-                      })}
+                      {...register("englishName")}
                     />
                     {errors.englishName && (
                       <p
@@ -190,9 +228,7 @@ export function RegisterDetailsPage() {
                           : undefined
                       }
                       className={inputClass}
-                      {...register("nepaliName", {
-                        required: t("registrationDetails.required"),
-                      })}
+                      {...register("nepaliName")}
                     />
                     {errors.nepaliName && (
                       <p
@@ -230,9 +266,7 @@ export function RegisterDetailsPage() {
                         : undefined
                     }
                     className={inputClass}
-                    {...register("contactNumber", {
-                      required: t("registrationDetails.required"),
-                    })}
+                    {...register("contactNumber")}
                   />
                   {errors.contactNumber && (
                     <p
@@ -264,13 +298,7 @@ export function RegisterDetailsPage() {
                       errors.email ? "registration-email-error" : undefined
                     }
                     className={inputClass}
-                    {...register("email", {
-                      required: t("registrationDetails.required"),
-                      pattern: {
-                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                        message: t("registrationDetails.emailRule"),
-                      },
-                    })}
+                    {...register("email")}
                   />
                   {errors.email && (
                     <p
@@ -307,7 +335,6 @@ export function RegisterDetailsPage() {
                         }
                         className={cn(inputClass, "pr-12")}
                         {...register("password", {
-                          required: t("registrationDetails.required"),
                           onChange: (event: ChangeEvent<HTMLInputElement>) => {
                             setPasswordValue(event.target.value);
                             if (getValues("confirmPassword")) {
@@ -367,10 +394,6 @@ export function RegisterDetailsPage() {
                         }
                         className={cn(inputClass, "pr-12")}
                         {...register("confirmPassword", {
-                          required: t("registrationDetails.required"),
-                          validate: (value) =>
-                            value === getValues("password") ||
-                            t("registrationDetails.passwordMismatch"),
                           onChange: (event: ChangeEvent<HTMLInputElement>) =>
                             setConfirmPasswordValue(event.target.value),
                         })}
@@ -414,13 +437,25 @@ export function RegisterDetailsPage() {
 
                 {submissionMessage && (
                   <div
-                    role="status"
-                    className="flex items-start gap-2 rounded-control border border-info bg-info-bg p-3 text-info-text"
+                    role={submissionError ? "alert" : "status"}
+                    className={cn(
+                      "flex items-start gap-2 rounded-control border p-3",
+                      submissionError
+                        ? "border-danger bg-danger-bg text-danger-text"
+                        : "border-success bg-success-bg text-success-text",
+                    )}
                   >
-                    <CircleAlert
-                      className="mt-0.5 size-5 shrink-0"
-                      aria-hidden="true"
-                    />
+                    {submissionError ? (
+                      <CircleAlert
+                        className="mt-0.5 size-5 shrink-0"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <Check
+                        className="mt-0.5 size-5 shrink-0"
+                        aria-hidden="true"
+                      />
+                    )}
                     <p className="text-small">{submissionMessage}</p>
                   </div>
                 )}
@@ -436,9 +471,12 @@ export function RegisterDetailsPage() {
                   </button>
                   <button
                     type="submit"
-                    className="inline-flex h-control w-full items-center justify-center gap-2 rounded-control bg-primary px-8 text-body font-medium text-white hover:bg-primary-dark md:w-auto"
+                    disabled={isSubmitting}
+                    className="inline-flex h-control w-full items-center justify-center gap-2 rounded-control bg-primary px-8 text-body font-medium text-white hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
                   >
-                    {t("registrationDetails.submit")}
+                    {isSubmitting
+                      ? t("registrationDetails.submitting")
+                      : t("registrationDetails.submit")}
                     <UserPlus className="size-5" aria-hidden="true" />
                   </button>
                 </div>

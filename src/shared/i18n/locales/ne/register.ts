@@ -70,6 +70,9 @@ export const neRegister: typeof enRegister = {
     passwordsMatch: "पासवर्डहरू मिलेका छन्",
     back: "पछाडि",
     submit: "खाता खोल्नुहोस्",
+    submitting: "खाता बनाउँदै...",
+    registrationSuccess: "तपाईंको दर्ता सफलतापूर्वक पठाइयो।",
+    registrationFailed: "दर्ता असफल भयो। कृपया फेरि प्रयास गर्नुहोस्।",
     securityTitle: "तपाईंको खाता सुरक्षा महत्त्वपूर्ण छ",
     securityNote:
       "आफ्नो खाता सुरक्षित राख्न बलियो र अरू खातामा प्रयोग नगरेको पासवर्ड राख्नुहोस्। तपाईंका सम्पर्क विवरण खाता पहुँच र सम्पर्कका लागि प्रयोग हुनेछन्।",
@@ -81,7 +84,5 @@ export const neRegister: typeof enRegister = {
     support: "सहायता",
     required: "यो विवरण आवश्यक छ।",
     passwordMismatch: "पासवर्डहरू मेल खाँदैनन्।",
-    formValidNotSubmitted:
-      "फारमको स्थानीय प्रमाणीकरण मात्र सफल भयो। ब्याकएन्ड API जडान नभएकाले दर्ता पठाइएको छैन।",
   },
 };

@@ -66,6 +66,9 @@ export const enRegister = {
     passwordsMatch: "Passwords match",
     back: "Back",
     submit: "Create account",
+    submitting: "Creating account...",
+    registrationSuccess: "Your registration was submitted successfully.",
+    registrationFailed: "Registration failed. Please try again.",
     securityTitle: "Your account security matters",
     securityNote:
       "Use a strong, unique password to protect your account. Your contact details will be used for account access and communication.",
@@ -78,7 +81,5 @@ export const enRegister = {
     support: "Support",
     required: "This field is required.",
     passwordMismatch: "Passwords do not match.",
-    formValidNotSubmitted:
-      "The form passed local validation only. Your registration has not been submitted because the backend API is not connected yet.",
   },
 };
