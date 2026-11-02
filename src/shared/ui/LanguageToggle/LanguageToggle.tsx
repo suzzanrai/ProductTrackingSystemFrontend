@@ -2,8 +2,8 @@ import { cn } from "@shared/lib";
 import { useUiStore, type Language } from "@shared/store";
 
 const options: { value: Language; label: string }[] = [
-  { value: "ne", label: "नेपाली" },
   { value: "en", label: "English" },
+  { value: "ne", label: "नेपाली" },
 ];
 
 export function LanguageToggle() {
@@ -14,7 +14,7 @@ export function LanguageToggle() {
     <div
       role="group"
       aria-label="भाषा / Language"
-      className="inline-flex overflow-hidden rounded-control border"
+      className="inline-flex h-10 rounded-control border bg-background p-0.5"
     >
       {options.map((option) => (
         <button
@@ -23,10 +23,10 @@ export function LanguageToggle() {
           aria-pressed={language === option.value}
           onClick={() => setLanguage(option.value)}
           className={cn(
-            "h-control px-4 text-body font-medium",
+            "h-full rounded-[6px] px-2 text-[12px] font-medium md:px-3 md:text-small",
             language === option.value
-              ? "bg-primary-light text-primary"
-              : "bg-surface text-text-muted hover:bg-background",
+              ? "bg-primary text-white"
+              : "text-text-muted hover:text-text",
           )}
         >
           {option.label}

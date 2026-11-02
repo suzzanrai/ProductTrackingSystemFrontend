@@ -22,16 +22,15 @@ export type RoleId = (typeof ROLE_IDS)[number];
 export interface RoleConfig {
   id: RoleId;
   icon: LucideIcon;
-  needsApproval: boolean;
 }
 
 export const ROLES: readonly RoleConfig[] = [
-  { id: "farmer", icon: Tractor, needsApproval: false },
-  { id: "collector", icon: Scale, needsApproval: false },
-  { id: "factory", icon: Factory, needsApproval: true },
-  { id: "wholesaler", icon: Warehouse, needsApproval: false },
-  { id: "retailer", icon: Store, needsApproval: false },
-  { id: "consumer", icon: User, needsApproval: false },
+  { id: "farmer", icon: Tractor },
+  { id: "collector", icon: Scale },
+  { id: "factory", icon: Factory },
+  { id: "wholesaler", icon: Warehouse },
+  { id: "retailer", icon: Store },
+  { id: "consumer", icon: User },
 ];
 
 export const DEFAULT_ROLE: RoleId = "farmer";

@@ -1,22 +1,20 @@
-import { useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import { AuthLayout } from "@widgets/auth-layout";
-import { RegistrationStepper } from "@widgets/registration-stepper";
-import { DEFAULT_ROLE, type RoleId } from "../model/roles";
+import { useRegistrationStore } from "@shared/store";
 import { RoleDropdown } from "./RoleDropdown";
 import { RolePreviewCard } from "./RolePreviewCard";
 
 export function RegisterRolePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [role, setRole] = useState<RoleId>(DEFAULT_ROLE);
+  const role = useRegistrationStore((state) => state.role);
+  const setRole = useRegistrationStore((state) => state.setRole);
 
   return (
     <AuthLayout>
-      <RegistrationStepper current={2} />
-
+    
       <header className="flex flex-col gap-1 border-t pt-6">
         <h1 className="text-heading font-semibold text-text md:text-title">
           {t("roleSelect.title")}

@@ -12,14 +12,13 @@ export const neRegister: typeof enRegister = {
     steps: {
       account: "खाता विवरण",
       role: "भूमिका चयन",
-      verification: "प्रमाणीकरण",
+      verification: "खाता सुरक्षा",
     },
   },
   roleSelect: {
     title: "आफ्नो भूमिका छान्नुहोस्",
     subtitle: "यसले तपाईंको आवश्यकता अनुसारका उपकरणहरू उपलब्ध गराउँछ।",
     label: "कार्यगत भूमिका",
-    needsApproval: "स्वीकृति आवश्यक",
     ledgerNote:
       "तपाईंको प्रमाणित लेजर पोर्टल र मोबाइल संकलन प्रणाली कन्फिगर गर्दछ।",
     roles: {
@@ -50,5 +49,39 @@ export const neRegister: typeof enRegister = {
         description: "तपाईंका उत्पादनहरू कहाँबाट आएका हुन् जाँच गर्नुहोस्।",
       },
     },
+  },
+  registrationDetails: {
+    roleLabel: "भूमिका:",
+    editRole: "परिवर्तन",
+    title: "आफ्नो खाता बनाउनुहोस्",
+    subtitle:
+      "अंग्रेजी र नेपालीमा आफ्नो नाम, सम्पर्क विवरण र सुरक्षित पासवर्ड प्रविष्ट गर्नुहोस्।",
+    englishName: "अंग्रेजीमा नाम",
+    englishNamePlaceholder: "अंग्रेजीमा आफ्नो नाम लेख्नुहोस्",
+    nepaliName: "नेपालीमा नाम",
+    nepaliNamePlaceholder: "नेपालीमा आफ्नो नाम लेख्नुहोस्",
+    contactNumber: "सम्पर्क नम्बर",
+    contactNumberPlaceholder: "+९७७ ९८XXXXXXXX",
+    email: "इमेल ठेगाना",
+    emailPlaceholder: "name@example.com",
+    emailRule: "मान्य इमेल ठेगाना लेख्नुहोस्।",
+    password: "पासवर्ड",
+    confirmPassword: "पासवर्ड पुष्टि गर्नुहोस्",
+    passwordsMatch: "पासवर्डहरू मिलेका छन्",
+    back: "पछाडि",
+    submit: "खाता खोल्नुहोस्",
+    securityTitle: "तपाईंको खाता सुरक्षा महत्त्वपूर्ण छ",
+    securityNote:
+      "आफ्नो खाता सुरक्षित राख्न बलियो र अरू खातामा प्रयोग नगरेको पासवर्ड राख्नुहोस्। तपाईंका सम्पर्क विवरण खाता पहुँच र सम्पर्कका लागि प्रयोग हुनेछन्।",
+    securityNoticeLabel: "सुरक्षा र गोपनीयता सूचना",
+    copyright: "© २०२५ TraceNepal",
+    collaboration: "कृषि तथा पशुपन्छी विकास मन्त्रालयको सहकार्य",
+    terms: "सर्तहरू",
+    privacy: "गोपनीयता",
+    support: "सहायता",
+    required: "यो विवरण आवश्यक छ।",
+    passwordMismatch: "पासवर्डहरू मेल खाँदैनन्।",
+    formValidNotSubmitted:
+      "फारमको स्थानीय प्रमाणीकरण मात्र सफल भयो। ब्याकएन्ड API जडान नभएकाले दर्ता पठाइएको छैन।",
   },
 };

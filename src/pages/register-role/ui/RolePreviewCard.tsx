@@ -1,7 +1,6 @@
 import { Check, ShieldCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ROLES, type RoleId } from "../model/roles";
-import { ApprovalBadge } from "./ApprovalBadge";
 
 interface RolePreviewCardProps {
   roleId: RoleId;
@@ -31,7 +30,6 @@ export function RolePreviewCard({ roleId }: RolePreviewCardProps) {
             <h2 className="text-heading font-semibold text-text">
               {t(`roleSelect.roles.${role.id}.title`)}
             </h2>
-            {role.needsApproval && <ApprovalBadge />}
           </div>
         </div>
         <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-white">

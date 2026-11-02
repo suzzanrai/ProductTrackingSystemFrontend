@@ -3,7 +3,6 @@ import { Check, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@shared/lib";
 import { ROLES, type RoleId } from "../model/roles";
-import { ApprovalBadge } from "./ApprovalBadge";
 
 interface RoleDropdownProps {
   value: RoleId;
@@ -127,9 +126,6 @@ export function RoleDropdown({ value, onChange }: RoleDropdownProps) {
           <span className="truncate text-body font-medium text-text">
             {t(`roleSelect.roles.${selected.id}.title`)}
           </span>
-          {selected.needsApproval && (
-            <ApprovalBadge className="hidden md:inline-flex" />
-          )}
         </span>
         <ChevronDown
           className={cn(
@@ -178,7 +174,6 @@ export function RoleDropdown({ value, onChange }: RoleDropdownProps) {
                       <span className="text-body font-semibold text-text">
                         {t(`roleSelect.roles.${role.id}.title`)}
                       </span>
-                      {role.needsApproval && <ApprovalBadge />}
                     </span>
                     <span className="text-small leading-snug text-text-muted">
                       {t(`roleSelect.roles.${role.id}.description`)}
