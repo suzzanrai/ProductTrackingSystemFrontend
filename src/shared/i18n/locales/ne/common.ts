@@ -11,6 +11,7 @@ export const neCommon: typeof enCommon = {
     language: "भाषा",
     next: "अर्को",
     back: "पछाडि",
+    signOut: "लगआउट",
   },
   header: {
     tagline: "कृषि आपूर्ति शृङ्खला प्रमाणीकरण",
@@ -34,5 +35,9 @@ export const neCommon: typeof enCommon = {
     copyright: "© २०२५ TraceNepal. राष्ट्रिय कृषि रसद तथा लेजर प्रणाली।",
     security: "सुरक्षा मापदण्ड",
     support: "सम्पर्क तथा सहयोग",
+  },
+  superAdmin: {
+    title: "सुपर-एडमिन कन्सोल",
+    welcome: "तपाईं प्रवेश गर्नुभएको छ। ड्यासबोर्ड चाँडै यहाँ उपलब्ध हुनेछ।",
   },
 };

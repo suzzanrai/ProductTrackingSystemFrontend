@@ -9,6 +9,7 @@ export const enCommon = {
     language: "Language",
     next: "Next",
     back: "Back",
+    signOut: "Sign out",
   },
   header: {
     tagline: "Agricultural Supply Chain Verification",
@@ -34,5 +35,9 @@ export const enCommon = {
       "© 2025 TraceNepal. National Agricultural Logistics & Ledger Platform.",
     security: "Security Standards",
     support: "Support",
+  },
+  superAdmin: {
+    title: "Super-admin console",
+    welcome: "You are signed in. The dashboard will be available here soon.",
   },
 };

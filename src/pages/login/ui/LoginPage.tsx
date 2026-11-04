@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -9,13 +9,15 @@ import {
   Eye,
   EyeOff,
   Lock,
+  LoaderCircle,
   LogIn,
   QrCode,
   Sprout,
   UserPlus,
 } from "lucide-react";
-import { cn } from "@shared/lib";
+import { cn, saveAuthSession } from "@shared/lib";
 import { LanguageToggle } from "@shared/ui";
+import { login } from "@features/auth/api/login";
 
 type LoginForm = {
   identifier: string;
@@ -28,23 +30,46 @@ const pillars = [1, 2, 3] as const;
 const inputBase =
   "h-control w-full rounded-control border bg-surface px-4 text-body text-text placeholder:text-text-muted focus:border-primary";
 
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "message" in error &&
+    typeof error.message === "string"
+  ) {
+    return error.message;
+  }
+
+  return fallback;
+}
+
 export function LoginPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [authError, setAuthError] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginForm>({
     defaultValues: { identifier: "", password: "", remember: false },
   });
 
-  const onSubmit = () => {
-    // TEMPORARY: no backend yet, so a valid form always shows the error box.
-    // The real login call replaces this in the auth step.
-    setAuthError(true);
+  const onSubmit = async ({ identifier, password, remember }: LoginForm) => {
+    setAuthError(null);
+    const loginIdentifier = identifier.trim();
+    try {
+      const credentials = loginIdentifier.includes("@")
+        ? { email: loginIdentifier, password }
+        : { contact: loginIdentifier, password };
+      const session = await login(credentials);
+      saveAuthSession(session.token, session.expiresAt, remember);
+      await navigate({ to: "/super-admin", replace: true });
+    } catch (error) {
+      setAuthError(getErrorMessage(error, t("login.errorInvalid")));
+    }
   };
 
   return (
@@ -139,7 +164,7 @@ export function LoginPage() {
               onSubmit={handleSubmit(onSubmit)}
               className="space-y-6"
             >
-              {/* Identifier */}
+              {/* Email or contact number */}
               <div className="space-y-2">
                 <label
                   htmlFor="identifier"
@@ -151,11 +176,32 @@ export function LoginPage() {
                   id="identifier"
                   type="text"
                   autoComplete="username"
+                  autoCapitalize="none"
+                  spellCheck={false}
                   placeholder={t("login.identifierPlaceholder")}
                   aria-invalid={!!errors.identifier}
-                  className={cn(inputBase, errors.identifier && "border-danger")}
+                  className={cn(
+                    inputBase,
+                    errors.identifier && "border-danger",
+                  )}
                   {...register("identifier", {
-                    required: t("login.identifierRequired"),
+                    validate: (value) => {
+                      const normalized = value.trim();
+                      if (!normalized) return t("login.identifierRequired");
+
+                      if (normalized.includes("@")) {
+                        return (
+                          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized) ||
+                          t("login.identifierInvalid")
+                        );
+                      }
+
+                      return (
+                        (/^[+\d\s().-]+$/.test(normalized) &&
+                          /\d/.test(normalized)) ||
+                        t("login.identifierInvalid")
+                      );
+                    },
                   })}
                 />
                 {errors.identifier && (
@@ -180,7 +226,7 @@ export function LoginPage() {
                     type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     placeholder="••••••••••••"
-                    aria-invalid={!!errors.password || authError}
+                    aria-invalid={!!errors.password || !!authError}
                     className={cn(
                       inputBase,
                       "pr-12",
@@ -221,7 +267,7 @@ export function LoginPage() {
                       className="mt-0.5 shrink-0 text-danger-text"
                     />
                     <span className="text-small font-semibold text-danger-text">
-                      {t("login.errorInvalid")}
+                      {authError}
                     </span>
                   </div>
                 )}
@@ -251,10 +297,17 @@ export function LoginPage() {
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="flex h-control w-full items-center justify-center gap-2 rounded-control bg-primary px-6 text-body font-medium text-white hover:bg-primary-dark"
+                  disabled={isSubmitting}
+                  className="flex h-control w-full items-center justify-center gap-2 rounded-control bg-primary px-6 text-body font-medium text-white hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  <span>{t("login.submit")}</span>
-                  <LogIn size={20} />
+                  <span>
+                    {isSubmitting ? t("login.submitting") : t("login.submit")}
+                  </span>
+                  {isSubmitting ? (
+                    <LoaderCircle size={20} className="animate-spin" />
+                  ) : (
+                    <LogIn size={20} />
+                  )}
                 </button>
               </div>
             </form>

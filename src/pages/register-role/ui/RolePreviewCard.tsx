@@ -28,7 +28,7 @@ export function RolePreviewCard({ roleId }: RolePreviewCardProps) {
           </span>
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-heading font-semibold text-text">
-              {t(`roleSelect.roles.${role.id}.title`)}
+              {t(`roleSelect.roles.${role.id.toLowerCase()}.title`)}
             </h2>
           </div>
         </div>
@@ -38,7 +38,7 @@ export function RolePreviewCard({ roleId }: RolePreviewCardProps) {
       </div>
 
       <p className="text-small leading-relaxed text-text-muted">
-        {t(`roleSelect.roles.${role.id}.description`)}
+        {t(`roleSelect.roles.${role.id.toLowerCase()}.description`)}
       </p>
 
       <p className="flex items-center gap-1.5 border-t pt-3 text-small text-text-muted">

@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { env } from "@shared/config";
+import { getAuthToken } from "@shared/lib";
 import type { ApiResponse } from "@shared/model";
 
 export const http = axios.create({
@@ -9,7 +10,7 @@ export const http = axios.create({
 });
 
 http.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = getAuthToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

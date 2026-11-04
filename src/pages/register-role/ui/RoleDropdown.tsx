@@ -124,7 +124,7 @@ export function RoleDropdown({ value, onChange }: RoleDropdownProps) {
             <SelectedIcon className="size-[18px]" aria-hidden="true" />
           </span>
           <span className="truncate text-body font-medium text-text">
-            {t(`roleSelect.roles.${selected.id}.title`)}
+            {t(`roleSelect.roles.${selected.id.toLowerCase()}.title`)}
           </span>
         </span>
         <ChevronDown
@@ -172,11 +172,13 @@ export function RoleDropdown({ value, onChange }: RoleDropdownProps) {
                   <span className="flex min-w-0 flex-col">
                     <span className="flex flex-wrap items-center gap-2">
                       <span className="text-body font-semibold text-text">
-                        {t(`roleSelect.roles.${role.id}.title`)}
+                        {t(`roleSelect.roles.${role.id.toLowerCase()}.title`)}
                       </span>
                     </span>
                     <span className="text-small leading-snug text-text-muted">
-                      {t(`roleSelect.roles.${role.id}.description`)}
+                      {t(
+                        `roleSelect.roles.${role.id.toLowerCase()}.description`,
+                      )}
                     </span>
                   </span>
                 </span>
