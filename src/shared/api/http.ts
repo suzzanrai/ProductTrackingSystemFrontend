@@ -1,6 +1,10 @@
 import axios, { AxiosError } from "axios";
 import { env } from "@shared/config";
-import { getAuthToken } from "@shared/lib";
+import {
+  clearAuthSession,
+  getAuthToken,
+  notifyAuthSessionExpired,
+} from "@shared/lib";
 import type { ApiResponse } from "@shared/model";
 
 export const http = axios.create({
@@ -21,6 +25,11 @@ http.interceptors.request.use((config) => {
 http.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiResponse>) => {
+    if (error.response?.status === 401) {
+      clearAuthSession();
+      notifyAuthSessionExpired();
+    }
+
     const normalized: ApiResponse =
       error.response?.data ?? {
         success: false,

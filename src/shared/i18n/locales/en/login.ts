@@ -1,7 +1,7 @@
 export const enLogin = {
   login: {
     title: "Log in",
-    subtitle: "Sign in to the super-admin console.",
+    subtitle: "Sign in to your TraceNepal workspace.",
     identifierLabel: "Email or contact number",
     identifierPlaceholder: "name@tracenepal.org or 98XXXXXXXX",
     identifierRequired: "Enter your email or contact number.",

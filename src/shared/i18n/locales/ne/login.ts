@@ -3,7 +3,7 @@ import type { enLogin } from "../en/login";
 export const neLogin: typeof enLogin = {
   login: {
     title: "लगइन गर्नुहोस्",
-    subtitle: "सुपर-एडमिन कन्सोलमा प्रवेश गर्नुहोस्।",
+    subtitle: "आफ्नो TraceNepal कार्यस्थलमा प्रवेश गर्नुहोस्।",
     identifierLabel: "इमेल वा सम्पर्क नम्बर",
     identifierPlaceholder: "नाम@tracenepal.org वा ९८XXXXXXXX",
     identifierRequired: "इमेल वा सम्पर्क नम्बर प्रविष्ट गर्नुहोस्।",

@@ -18,7 +18,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { ROLES } from "@pages/register-role/model/roles";
+import { ROLES } from "@features/registration/model/roles";
 import { useRegistrationStore } from "@shared/store";
 import { cn } from "@shared/lib";
 import { LanguageToggle } from "@shared/ui";
