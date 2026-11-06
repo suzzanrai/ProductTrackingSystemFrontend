@@ -43,10 +43,12 @@ export const enCommon = {
   dashboard: {
     govBadge: "Gov",
     registryPlatform: "Registry Platform",
+    core: "Core",
+    dashboard: "Dashboard",
     workspaceNavigation: "Workspace navigation",
     workspace: "Workspace",
     overview: "Overview",
-    modules: "Your tools",
+    modules: "Management",
     comingSoon: "Coming soon",
     soon: "Soon",
     signedIn: "Signed in",
@@ -54,6 +56,9 @@ export const enCommon = {
     openNavigation: "Open navigation",
     closeNavigation: "Close navigation",
     help: "Help (coming soon)",
+    notifications: "Notifications",
+    profileMenu: "Open profile menu",
+    searchPlaceholder: "Search batches, licenses, QR code...",
     welcome: "Welcome to your workspace",
     workspaceReady: "Your workspace is ready",
     workspaceDescription:
@@ -70,6 +75,12 @@ export const enCommon = {
     footerTagline:
       "National Agricultural Traceability & Quality Infrastructure",
     footerGateway: "Secure registry workspace",
+    footerCopyright: "© 2025 TraceNepal",
+    footerRegistry: "National Registry",
+    footerNavigation: "Footer navigation",
+    footerPrivacy: "Privacy Policy",
+    footerSecurity: "Security",
+    footerSupport: "Support",
     roles: {
       superAdmin: "Super Admin",
       localAdmin: "Local Admin",

@@ -1,12 +1,19 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { getAuthToken, clearAuthSession } from "@shared/lib";
+import { getDashboardForRole, getRoleFromToken } from "@features/auth/model/token-role";
 
 export const Route = createFileRoute("/_auth")({
   component: () => <Outlet />,
-  beforeLoad: async () => {
-    // Redirect to the login page if the user is not authenticated
-    // const isAuthenticated = await checkUserAuthentication(); // Replace with your authentication check logic
-    // if (!isAuthenticated) {
-    //   window.location.href = "/login"; // Redirect to the login page
-    // }
-  }
+  beforeLoad: () => {
+    const token = getAuthToken();
+    if (!token) return;
+
+    const role = getRoleFromToken(token);
+    if (!role) {
+      clearAuthSession();
+      return;
+    }
+
+    throw redirect({ to: getDashboardForRole(role), replace: true });
+  },
 });

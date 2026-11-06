@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { getAuthToken } from "@shared/lib";
+import { clearAuthSession, getAuthToken } from "@shared/lib";
+import { getRoleFromToken } from "@features/auth/model/token-role";
 import {
   previewAuthenticatedUser,
   unavailableAuthenticatedUser,
@@ -8,7 +9,13 @@ import { AuthenticatedDashboardLayout } from "@widgets/dashboard-layout";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: () => {
-    if (!getAuthToken()) {
+    const token = getAuthToken();
+    if (!token) {
+      throw redirect({ to: "/login" });
+    }
+
+    if (!getRoleFromToken(token)) {
+      clearAuthSession();
       throw redirect({ to: "/login" });
     }
 
