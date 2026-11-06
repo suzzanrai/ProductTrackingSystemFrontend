@@ -1,5 +1,6 @@
 const TOKEN_KEY = "token";
 const EXPIRY_KEY = "tokenExpiresAt";
+export const AUTH_SESSION_EXPIRED_EVENT = "pts:auth-session-expired";
 
 type AuthStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
@@ -55,4 +56,8 @@ export function saveAuthSession(
 export function clearAuthSession() {
   removeSession(window.localStorage);
   removeSession(window.sessionStorage);
+}
+
+export function notifyAuthSessionExpired() {
+  window.dispatchEvent(new Event(AUTH_SESSION_EXPIRED_EVENT));
 }

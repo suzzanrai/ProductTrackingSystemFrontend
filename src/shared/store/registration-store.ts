@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { DEFAULT_ROLE, type RoleId } from "@pages/register-role/model/roles";
+import { DEFAULT_ROLE, type RoleId } from "@features/registration/model/roles";
 
 interface RegistrationState {
   role: RoleId;

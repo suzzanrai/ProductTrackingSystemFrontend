@@ -1,6 +1,6 @@
 import { Check, ShieldCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { ROLES, type RoleId } from "../model/roles";
+import { ROLES, type RoleId } from "@features/registration/model/roles";
 
 interface RolePreviewCardProps {
   roleId: RoleId;

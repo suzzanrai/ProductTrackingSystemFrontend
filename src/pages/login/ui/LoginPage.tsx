@@ -66,7 +66,7 @@ export function LoginPage() {
         : { contact: loginIdentifier, password };
       const session = await login(credentials);
       saveAuthSession(session.token, session.expiresAt, remember);
-      await navigate({ to: "/super-admin", replace: true });
+      await navigate({ to: "/dashboard", replace: true });
     } catch (error) {
       setAuthError(getErrorMessage(error, t("login.errorInvalid")));
     }

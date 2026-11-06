@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { Check, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@shared/lib";
-import { ROLES, type RoleId } from "../model/roles";
+import { ROLES, type RoleId } from "@features/registration/model/roles";
 
 interface RoleDropdownProps {
   value: RoleId;

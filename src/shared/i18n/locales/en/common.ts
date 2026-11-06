@@ -40,4 +40,91 @@ export const enCommon = {
     title: "Super-admin console",
     welcome: "You are signed in. The dashboard will be available here soon.",
   },
+  dashboard: {
+    govBadge: "Gov",
+    registryPlatform: "Registry Platform",
+    workspaceNavigation: "Workspace navigation",
+    workspace: "Workspace",
+    overview: "Overview",
+    modules: "Your tools",
+    comingSoon: "Coming soon",
+    soon: "Soon",
+    signedIn: "Signed in",
+    previewRole: "Preview role (UI only)",
+    openNavigation: "Open navigation",
+    closeNavigation: "Close navigation",
+    help: "Help (coming soon)",
+    welcome: "Welcome to your workspace",
+    workspaceReady: "Your workspace is ready",
+    workspaceDescription:
+      "Your {{role}} workspace is set up. Role-specific tools and activity will appear here as they become available.",
+    moduleDescription: "This workspace area is being prepared for your role.",
+    moduleComingSoon:
+      "This section is ready for its role-specific tools. The module will be available here once its workflows are connected.",
+    moduleNotFound: "Page not found",
+    moduleNotFoundDescription:
+      "This page is not part of the current role workspace.",
+    activityTitle: "Recent activity",
+    activityEmpty:
+      "New activity will appear here when you start using your workspace.",
+    footerTagline:
+      "National Agricultural Traceability & Quality Infrastructure",
+    footerGateway: "Secure registry workspace",
+    roles: {
+      superAdmin: "Super Admin",
+      localAdmin: "Local Admin",
+    },
+    roleDescriptions: {
+      superAdmin:
+        "Oversee platform organizations, access, and national traceability operations.",
+      localAdmin:
+        "Manage local users, approvals, and product records for your assigned area.",
+    },
+    moduleNames: {
+      farmer: {
+        farms: "My farms",
+        harvests: "Harvests",
+        certifications: "Certifications",
+      },
+      collector: {
+        collection: "Collection points",
+        shipments: "Shipments",
+        partners: "Farmer partners",
+      },
+      factory: {
+        processing: "Processing",
+        batches: "Production batches",
+        quality: "Quality checks",
+      },
+      wholesaler: {
+        suppliers: "Suppliers",
+        inventory: "Inventory",
+        orders: "Orders",
+      },
+      retailer: {
+        stock: "Store stock",
+        sales: "Sales",
+        traceability: "Product traceability",
+      },
+      consumer: {
+        scan: "Scan a product",
+        history: "Scan history",
+        saved: "Saved products",
+      },
+      superAdmin: {
+        organizations: "Organizations",
+        roles: "Users & roles",
+        audits: "Audit reports",
+        qrVault: "Consignment QR vault",
+        settings: "Platform settings",
+      },
+      localAdmin: {
+        users: "Local users",
+        approvals: "Pending approvals",
+        products: "Products & categories",
+        reports: "Local reports",
+        settings: "Local settings",
+      },
+    },
+  },
 };
