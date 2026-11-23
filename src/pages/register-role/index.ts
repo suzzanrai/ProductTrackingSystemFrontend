@@ -1,1 +1,0 @@
-export { RegisterRolePage } from "./ui/RegisterRolePage";
