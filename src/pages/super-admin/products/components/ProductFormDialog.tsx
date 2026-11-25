@@ -2,18 +2,20 @@ import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { FormDialog } from "../../components/FormDialog";
 import { Field, fieldClassName } from "../../components/Field";
-import type {
-  MockCategory,
-  MockProduct,
-  MockUnit,
-} from "../../model/mock-data";
+import type { MaterialCategory } from "../../categories/api/categories";
+import type { Material, MaterialWrite } from "../api/materials";
+import type { MaterialUnit } from "../../unit/api/units";
+import {
+  ProductUnitSelector,
+  type UnitAssignmentDraft,
+} from "./ProductUnitSelector";
 
-export type ProductValues = Omit<MockProduct, "id" | "usedCount">;
+export type ProductValues = MaterialWrite;
 
 interface ProductFormDialogProps {
-  product: MockProduct | null;
-  categories: MockCategory[];
-  units: MockUnit[];
+  product: Material | null;
+  categories: MaterialCategory[];
+  units: MaterialUnit[];
   onClose: () => void;
   onSave: (values: ProductValues) => void;
 }
@@ -25,28 +27,84 @@ export function ProductFormDialog({
   onClose,
   onSave,
 }: ProductFormDialogProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isNepali = i18n.language.startsWith("ne");
+  const [code, setCode] = useState(product?.code ?? "");
   const [nameEn, setNameEn] = useState(product?.nameEn ?? "");
   const [nameNp, setNameNp] = useState(product?.nameNp ?? "");
   const [categoryId, setCategoryId] = useState(
-    String(product?.categoryId ?? ""),
+    product?.materialCategoryId ?? "",
   );
-  const [selectedUnits, setSelectedUnits] = useState<string[]>(
-    product?.units ?? ["kg"],
+  const [description, setDescription] = useState(product?.description ?? "");
+  const [isBatchTracked, setIsBatchTracked] = useState(
+    product?.isBatchTracked ?? false,
   );
-  const [descEn, setDescEn] = useState(product?.descEn ?? "");
-  const [descNp, setDescNp] = useState(product?.descNp ?? "");
+  const [isSerialTracked, setIsSerialTracked] = useState(
+    product?.isSerialTracked ?? false,
+  );
+  const [minimumStockLevel, setMinimumStockLevel] = useState(
+    String(product?.minimumStockLevel ?? 0),
+  );
+  const [reorderLevel, setReorderLevel] = useState(
+    String(product?.reorderLevel ?? 0),
+  );
+  const initialAssignments: UnitAssignmentDraft[] =
+    product?.units.map((unit) => ({
+      unitId: unit.unitId,
+      conversionFactorToBaseUnit: String(unit.conversionFactorToBaseUnit),
+    })) ?? [];
+  const [unitAssignments, setUnitAssignments] =
+    useState<UnitAssignmentDraft[]>(initialAssignments);
+  const [baseUnitId, setBaseUnitId] = useState(
+    product?.units.find((unit) => unit.isBaseUnit)?.unitId ??
+      initialAssignments[0]?.unitId ??
+      "",
+  );
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!categoryId || selectedUnits.length === 0) return;
+    if (!categoryId || unitAssignments.length === 0 || !baseUnitId) return;
+
+    const minimumStock = Number(minimumStockLevel);
+    const reorder = Number(reorderLevel);
+    if (
+      !Number.isFinite(minimumStock) ||
+      minimumStock < 0 ||
+      !Number.isFinite(reorder) ||
+      reorder < 0
+    ) {
+      return;
+    }
+
+    const hasInvalidFactor = unitAssignments.some((assignment) => {
+      if (assignment.unitId === baseUnitId) return false;
+      const factor = Number(assignment.conversionFactorToBaseUnit);
+      return !Number.isFinite(factor) || factor <= 0;
+    });
+    if (hasInvalidFactor) return;
+
+    const assignedUnits = unitAssignments.map((assignment) => {
+      return {
+        unitId: assignment.unitId,
+        conversionFactorToBaseUnit:
+          assignment.unitId === baseUnitId
+            ? 1
+            : Number(assignment.conversionFactorToBaseUnit),
+        isBaseUnit: assignment.unitId === baseUnitId,
+      };
+    });
+
     onSave({
+      code: code.trim(),
       nameEn: nameEn.trim(),
       nameNp: nameNp.trim(),
-      categoryId: Number(categoryId),
-      units: selectedUnits,
-      descEn: descEn.trim() || nameEn.trim(),
-      descNp: descNp.trim() || nameNp.trim(),
+      materialCategoryId: categoryId,
+      isBatchTracked,
+      isSerialTracked,
+      minimumStockLevel: minimumStock,
+      reorderLevel: reorder,
+      description: description.trim(),
+      units: assignedUnits,
     });
   }
 
@@ -56,9 +114,7 @@ export function ProductFormDialog({
         `dashboard.superAdminPages.${product ? "editProduct" : "addProduct"}`,
       )}
       submitLabel={t(
-        product
-          ? "dashboard.superAdminPages.update"
-          : "common.save",
+        product ? "dashboard.superAdminPages.update" : "common.save",
       )}
       maxWidth="760px"
       onClose={onClose}
@@ -66,6 +122,37 @@ export function ProductFormDialog({
     >
       {(markDirty) => (
         <>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field
+              label={t("dashboard.superAdminPages.productCode")}
+              value={code}
+              onChange={setCode}
+              onDirty={markDirty}
+            />
+            <label className="block space-y-1.5">
+              <span className="text-sm font-medium text-text-muted">
+                {t("dashboard.superAdminPages.category")} *
+              </span>
+              <select
+                required
+                value={categoryId}
+                onChange={(event) => {
+                  markDirty();
+                  setCategoryId(event.target.value);
+                }}
+                className={fieldClassName}
+              >
+                <option value="">
+                  {t("dashboard.superAdminPages.selectCategory")}
+                </option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {isNepali ? category.nameNp : category.nameEn}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
           <div className="grid gap-4 md:grid-cols-2">
             <Field
               label={t("dashboard.superAdminPages.nameEn")}
@@ -80,97 +167,72 @@ export function ProductFormDialog({
               onDirty={markDirty}
             />
           </div>
+          <ProductUnitSelector
+            units={units}
+            assignments={unitAssignments}
+            baseUnitId={baseUnitId}
+            onChange={(assignments, nextBaseUnitId) => {
+              setUnitAssignments(assignments);
+              setBaseUnitId(nextBaseUnitId);
+            }}
+            onDirty={markDirty}
+          />
           <label className="block space-y-1.5">
             <span className="text-sm font-medium text-text-muted">
-              {t("dashboard.superAdminPages.category")} *
+              {t("dashboard.superAdminPages.description")}
             </span>
-            <select
-              required
-              value={categoryId}
+            <textarea
+              rows={3}
+              value={description}
               onChange={(event) => {
                 markDirty();
-                setCategoryId(event.target.value);
+                setDescription(event.target.value);
               }}
-              className={fieldClassName}
-            >
-              <option value="">
-                {t("dashboard.superAdminPages.selectCategory")}
-              </option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.nameEn}
-                </option>
-              ))}
-            </select>
+              className="w-full rounded-control border border-border bg-surface p-3 text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
           </label>
-          <fieldset className="space-y-2">
-            <legend className="text-sm font-medium text-text-muted">
-              {t("dashboard.superAdminPages.units")} *
-            </legend>
-            <p className="text-xs text-text-muted">
-              {t("dashboard.superAdminPages.multipleUnits")}
-            </p>
-            <div className="flex flex-wrap gap-2.5">
-              {units.map((unit) => {
-                const selected = selectedUnits.includes(unit.shortEn);
-                return (
-                  <button
-                    key={unit.id}
-                    type="button"
-                    aria-pressed={selected}
-                    onClick={() => {
-                      markDirty();
-                      setSelectedUnits((current) =>
-                        selected
-                          ? current.filter((key) => key !== unit.shortEn)
-                          : [...current, unit.shortEn],
-                      );
-                    }}
-                    className={`flex h-10 items-center gap-2 rounded-control border px-4 text-sm font-medium transition-colors ${
-                      selected
-                        ? "border-primary bg-primary-light text-primary"
-                        : "border-border bg-surface text-text hover:border-primary"
-                    }`}
-                  >
-                    {unit.nameEn} ({unit.shortEn})
-                  </button>
-                );
-              })}
-            </div>
-            {selectedUnits.length === 0 && (
-              <p className="text-xs text-danger">
-                {t("dashboard.superAdminPages.chooseUnit")}
-              </p>
-            )}
-          </fieldset>
           <div className="grid gap-4 md:grid-cols-2">
-            <label className="block space-y-1.5">
-              <span className="text-sm font-medium text-text-muted">
-                {t("dashboard.superAdminPages.descriptionEn")}
-              </span>
-              <textarea
-                rows={3}
-                value={descEn}
+            <Field
+              label={t("dashboard.superAdminPages.minimumStockLevel")}
+              value={minimumStockLevel}
+              onChange={setMinimumStockLevel}
+              onDirty={markDirty}
+              type="number"
+              min={0}
+              step="any"
+            />
+            <Field
+              label={t("dashboard.superAdminPages.reorderLevel")}
+              value={reorderLevel}
+              onChange={setReorderLevel}
+              onDirty={markDirty}
+              type="number"
+              min={0}
+              step="any"
+            />
+          </div>
+          <div className="flex flex-wrap gap-5">
+            <label className="flex items-center gap-2 text-sm text-text">
+              <input
+                type="checkbox"
+                checked={isBatchTracked}
                 onChange={(event) => {
                   markDirty();
-                  setDescEn(event.target.value);
+                  setIsBatchTracked(event.target.checked);
                 }}
-                className="w-full rounded-control border border-border bg-surface p-3 text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
+              {t("dashboard.superAdminPages.batchTracked")}
             </label>
-            <label className="block space-y-1.5">
-              <span className="text-sm font-medium text-text-muted">
-                {t("dashboard.superAdminPages.descriptionNp")}
-              </span>
-              <textarea
-                rows={3}
-                value={descNp}
+            <label className="flex items-center gap-2 text-sm text-text">
+              <input
+                type="checkbox"
+                checked={isSerialTracked}
                 onChange={(event) => {
                   markDirty();
-                  setDescNp(event.target.value);
+                  setIsSerialTracked(event.target.checked);
                 }}
-                className="w-full rounded-control border border-border bg-surface p-3 text-text focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
+              {t("dashboard.superAdminPages.serialTracked")}
             </label>
           </div>
         </>

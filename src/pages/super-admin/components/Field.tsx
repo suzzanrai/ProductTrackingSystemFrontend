@@ -10,6 +10,8 @@ interface FieldProps {
   onDirty: () => void;
   required?: boolean;
   type?: string;
+  min?: number;
+  step?: string;
 }
 
 export function Field({
@@ -19,6 +21,8 @@ export function Field({
   onDirty,
   required = true,
   type = "text",
+  min,
+  step,
 }: FieldProps) {
   return (
     <DashboardField
@@ -30,6 +34,8 @@ export function Field({
         onChange(event.target.value);
       }}
       required={required}
+      min={min}
+      step={step}
       className={fieldClassName}
     />
   );

@@ -2,32 +2,41 @@ import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Field, fieldClassName } from "../../components/Field";
 import { FormDialog } from "../../components/FormDialog";
-import type { MockUnit } from "../../model/mock-data";
+import type { MaterialUnit, MaterialUnitWrite, UnitCategory } from "../api/units";
 
-export type UnitValues = Omit<MockUnit, "id">;
+export type UnitValues = MaterialUnitWrite;
 
 interface UnitFormDialogProps {
-  unit: MockUnit | null;
+  unit: MaterialUnit | null;
+  categories: UnitCategory[];
   onClose: () => void;
   onSave: (values: UnitValues) => void;
 }
 
 export function UnitFormDialog({
   unit,
+  categories,
   onClose,
   onSave,
 }: UnitFormDialogProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isNepali = i18n.language.startsWith("ne");
   const [nameEn, setNameEn] = useState(unit?.nameEn ?? "");
   const [nameNp, setNameNp] = useState(unit?.nameNp ?? "");
-  const [shortEn, setShortEn] = useState(unit?.shortEn ?? "");
-  const [shortNp, setShortNp] = useState(unit?.shortNp ?? "");
-  const [type, setType] = useState(unit?.type ?? "");
+  const [abbreviation, setAbbreviation] = useState(unit?.abbreviation ?? "");
+  const [unitCategoryId, setUnitCategoryId] = useState(
+    unit?.unitCategoryId ?? "",
+  );
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (type !== "Weight" && type !== "Volume" && type !== "Count") return;
-    onSave({ nameEn: nameEn.trim(), nameNp: nameNp.trim(), shortEn: shortEn.trim(), shortNp: shortNp.trim(), type });
+    if (!unitCategoryId) return;
+    onSave({
+      nameEn: nameEn.trim(),
+      nameNp: nameNp.trim(),
+      abbreviation: abbreviation.trim(),
+      unitCategoryId,
+    });
   }
 
   return (
@@ -40,30 +49,44 @@ export function UnitFormDialog({
       {(markDirty) => (
         <>
           <div className="grid gap-4 md:grid-cols-2">
-            <Field label={t("dashboard.superAdminPages.fullNameEn")} value={nameEn} onChange={setNameEn} onDirty={markDirty} />
-            <Field label={t("dashboard.superAdminPages.fullNameNp")} value={nameNp} onChange={setNameNp} onDirty={markDirty} />
+            <Field
+              label={t("dashboard.superAdminPages.fullNameEn")}
+              value={nameEn}
+              onChange={setNameEn}
+              onDirty={markDirty}
+            />
+            <Field
+              label={t("dashboard.superAdminPages.fullNameNp")}
+              value={nameNp}
+              onChange={setNameNp}
+              onDirty={markDirty}
+            />
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <Field label={t("dashboard.superAdminPages.shortNameEn")} value={shortEn} onChange={setShortEn} onDirty={markDirty} />
-            <Field label={t("dashboard.superAdminPages.shortNameNp")} value={shortNp} onChange={setShortNp} onDirty={markDirty} />
-          </div>
+          <Field
+            label={t("dashboard.superAdminPages.abbreviation")}
+            value={abbreviation}
+            onChange={setAbbreviation}
+            onDirty={markDirty}
+          />
           <label className="block space-y-1.5">
             <span className="text-sm font-medium text-text-muted">
               {t("dashboard.superAdminPages.unitType")} *
             </span>
             <select
               required
-              value={type}
+              value={unitCategoryId}
               onChange={(event) => {
                 markDirty();
-                setType(event.target.value);
+                setUnitCategoryId(event.target.value);
               }}
               className={fieldClassName}
             >
-              <option value="">{t("dashboard.superAdminPages.selectUnitType")}</option>
-              {(["Weight", "Volume", "Count"] as const).map((unitType) => (
-                <option key={unitType} value={unitType}>
-                  {t(`dashboard.superAdminPages.unitTypes.${unitType}`)}
+              <option value="">
+                {t("dashboard.superAdminPages.selectUnitType")}
+              </option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {isNepali ? category.nameNp : category.nameEn}
                 </option>
               ))}
             </select>

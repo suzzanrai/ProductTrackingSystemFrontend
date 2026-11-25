@@ -4,9 +4,6 @@ export const neSuperAdminUnits = {
   addUnit: "एकाइ थप्नुहोस्",
   fullNameNp: "पूरा नाम (नेपाली)",
   fullNameEn: "पूरा नाम (अंग्रेजी)",
-  shortName: "छोटो नाम",
-  shortNameEn: "छोटो नाम (अंग्रेजी)",
-  shortNameNp: "छोटो नाम (नेपाली)",
   unitType: "एकाइको प्रकार",
   selectUnitType: "एकाइको प्रकार छान्नुहोस्",
   unitTypes: {

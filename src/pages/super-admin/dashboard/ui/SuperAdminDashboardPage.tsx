@@ -1,18 +1,30 @@
 import { useTranslation } from "react-i18next";
-import { useSuperAdminMockData } from "../../model/mock-data";
+import { ApiStatus } from "../../components/ApiStatus";
+import { useMaterialCategories } from "../../categories/api/categories";
+import { useMaterials } from "../../products/api/materials";
+import { useUnits } from "../../unit/api/units";
 import { ProductsUsageList } from "../components/ProductsUsageList";
 import { SuperAdminStats } from "../components/SuperAdminStats";
 
 export function SuperAdminDashboardPage() {
   const { t } = useTranslation();
-  const products = useSuperAdminMockData((state) => state.products);
-  const categories = useSuperAdminMockData((state) => state.categories);
-  const units = useSuperAdminMockData((state) => state.units);
+  const productsQuery = useMaterials();
+  const categoriesQuery = useMaterialCategories();
+  const unitsQuery = useUnits();
+
+  const isLoading =
+    productsQuery.isLoading ||
+    categoriesQuery.isLoading ||
+    unitsQuery.isLoading;
+  const error =
+    productsQuery.error ??
+    categoriesQuery.error ??
+    unitsQuery.error;
 
   return (
     <section className="space-y-6">
       <header>
-        <h1 className="text-[32px] font-bold leading-tight text-text">
+        <h1 className="text-3xl font-bold leading-tight text-text md:text-4xl">
           {t("dashboard.dashboard")}
         </h1>
         <p className="mt-1 text-sm text-text-muted">
@@ -20,12 +32,27 @@ export function SuperAdminDashboardPage() {
         </p>
       </header>
 
-      <SuperAdminStats
-        productCount={products.length}
-        categoryCount={categories.length}
-        unitCount={units.length}
+      <ApiStatus
+        loading={isLoading}
+        error={error}
+        onRetry={() => {
+          void Promise.all([
+            productsQuery.refetch(),
+            categoriesQuery.refetch(),
+            unitsQuery.refetch(),
+          ]);
+        }}
       />
-      <ProductsUsageList products={products} />
+      {!isLoading && !error && (
+        <>
+          <SuperAdminStats
+            productCount={productsQuery.data?.length ?? 0}
+            categoryCount={categoriesQuery.data?.length ?? 0}
+            unitCount={unitsQuery.data?.length ?? 0}
+          />
+          <ProductsUsageList products={[]} />
+        </>
+      )}
     </section>
   );
 }

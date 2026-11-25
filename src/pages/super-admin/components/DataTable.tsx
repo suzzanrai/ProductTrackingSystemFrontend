@@ -19,22 +19,22 @@ export function DataTable({
   minWidth,
 }: DataTableProps) {
   return (
-    <div className="overflow-hidden rounded-card border border-border bg-surface">
-      <div className="flex min-h-11 items-center justify-between border-b border-border px-4 md:px-5">
-        <p className="text-xs font-medium text-text-muted">{recordLabel}</p>
+    <div className="w-full min-w-0 overflow-hidden rounded-card border border-border bg-surface">
+      <div className="flex min-h-12 items-center justify-between border-b border-border px-5 md:px-6">
+        <p className="text-sm font-medium text-text-muted">{recordLabel}</p>
       </div>
       <div className="overflow-x-auto">
         <table
-          className="w-full border-collapse text-left text-sm"
+          className="w-full border-collapse text-left text-[15px]"
           style={{ minWidth }}
         >
           <thead>
-            <tr className="h-11 border-b border-border bg-background text-left text-[11px] font-semibold uppercase tracking-wide text-text-muted">
+            <tr className="h-12 border-b border-border bg-background text-left text-xs font-semibold uppercase tracking-wide text-text-muted">
               {headers.map((header, index) => (
                 <th
                   key={header}
                   scope="col"
-                  className={`whitespace-nowrap px-4 py-3 md:px-5 ${
+                  className={`whitespace-nowrap px-5 py-3.5 md:px-6 ${
                     index === 0 ? "w-16" : ""
                   } ${index === headers.length - 1 ? "w-36 text-right" : ""}`}
                 >
@@ -43,14 +43,14 @@ export function DataTable({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-border text-[13px] leading-5 text-text">
+          <tbody className="divide-y divide-border text-sm leading-6 text-text">
             {children}
           </tbody>
         </table>
       </div>
       {empty && (
-        <div className="p-10 text-center text-sm text-text-muted">
-          <Search className="mx-auto mb-2 size-8 opacity-50" aria-hidden="true" />
+        <div className="p-12 text-center text-base text-text-muted">
+          <Search className="mx-auto mb-3 size-9 opacity-50" aria-hidden="true" />
           <p>{emptyLabel}</p>
         </div>
       )}

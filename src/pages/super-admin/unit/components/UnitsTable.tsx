@@ -1,17 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { DataTable } from "../../components/DataTable";
 import { RowActions } from "../../components/RowActions";
-import type { MockUnit } from "../../model/mock-data";
+import type { MaterialUnit } from "../api/units";
 
 interface UnitsTableProps {
-  units: MockUnit[];
+  units: MaterialUnit[];
   isNepali: boolean;
-  onEdit: (unit: MockUnit) => void;
-  onDelete: (unitId: number) => void;
+  onEdit: (unit: MaterialUnit) => void;
+  onDelete: (unitId: string) => void;
 }
 
-const rowClassName = "h-14 transition-colors hover:bg-background/80";
-const cellClassName = "px-4 py-2.5 md:px-5";
+const rowClassName = "h-16 transition-colors hover:bg-background/80";
+const cellClassName = "px-5 py-3 md:px-6";
 
 export function UnitsTable({
   units,
@@ -27,7 +27,7 @@ export function UnitsTable({
         t("dashboard.superAdminPages.no"),
         t("dashboard.superAdminPages.fullNameNp"),
         t("dashboard.superAdminPages.fullNameEn"),
-        t("dashboard.superAdminPages.shortName"),
+        t("dashboard.superAdminPages.abbreviation"),
         t("dashboard.superAdminPages.unitType"),
         t("dashboard.superAdminPages.action"),
       ]}
@@ -36,11 +36,11 @@ export function UnitsTable({
       recordLabel={t("dashboard.superAdminPages.recordCount", {
         count: units.length,
       })}
-      minWidth={800}
+      minWidth={720}
     >
       {units.map((item, index) => (
         <tr key={item.id} className={rowClassName}>
-          <td className={`${cellClassName} whitespace-nowrap font-mono text-xs text-text-muted`}>
+          <td className={`${cellClassName} whitespace-nowrap font-mono text-sm text-text-muted`}>
             {index + 1}
           </td>
           <td className={`${cellClassName} whitespace-nowrap font-semibold`}>
@@ -50,12 +50,14 @@ export function UnitsTable({
             {item.nameEn}
           </td>
           <td className={`${cellClassName} whitespace-nowrap`}>
-            <span className="rounded border border-border bg-background px-2.5 py-1 font-mono text-xs font-semibold">
-              {isNepali ? item.shortNp : item.shortEn}
+            <span             className="rounded border border-border bg-background px-3 py-1.5 font-mono text-sm font-semibold">
+              {item.abbreviation}
             </span>
           </td>
           <td className={`${cellClassName} whitespace-nowrap text-text-muted`}>
-            {t(`dashboard.superAdminPages.unitTypes.${item.type}`)}
+            {isNepali
+              ? item.unitCategoryNameNp ?? "—"
+              : item.unitCategoryNameEn ?? "—"}
           </td>
           <td className={cellClassName}>
             <RowActions

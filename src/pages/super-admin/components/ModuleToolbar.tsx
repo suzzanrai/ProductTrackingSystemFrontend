@@ -7,6 +7,7 @@ interface ModuleToolbarProps {
   actionLabel: string;
   actionIcon: ReactNode;
   onAction: () => void;
+  actionDisabled?: boolean;
 }
 
 export function ModuleToolbar({
@@ -14,15 +15,16 @@ export function ModuleToolbar({
   actionLabel,
   actionIcon,
   onAction,
+  actionDisabled = false,
 }: ModuleToolbarProps) {
   const { t } = useTranslation();
 
   return (
     <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-      <label className="relative w-full md:max-w-sm">
+      <label className="relative w-full md:max-w-lg">
         <Search
           size={18}
-          className="pointer-events-none absolute left-3.5 top-3 text-text-muted"
+          className="pointer-events-none absolute left-4 top-3.5 text-text-muted"
           aria-hidden="true"
         />
         <input
@@ -30,13 +32,14 @@ export function ModuleToolbar({
           onChange={(event) => onSearch(event.target.value)}
           placeholder={t("dashboard.superAdminPages.search")}
           aria-label={t("dashboard.superAdminPages.search")}
-          className="h-11 w-full rounded-control border border-border bg-surface pl-10 pr-4 text-sm text-text placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
+          className="h-12 w-full rounded-control border border-border bg-surface pl-11 pr-4 text-base text-text placeholder:text-text-muted focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15"
         />
       </label>
       <button
         type="button"
         onClick={onAction}
-        className="flex h-11 w-full items-center justify-center gap-2 rounded-control bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark md:w-auto"
+        disabled={actionDisabled}
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-control bg-primary px-6 text-base font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50 md:w-auto"
       >
         {actionIcon}
         {actionLabel}

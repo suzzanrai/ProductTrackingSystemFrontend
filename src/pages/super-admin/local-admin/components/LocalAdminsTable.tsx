@@ -10,8 +10,8 @@ interface LocalAdminsTableProps {
   onRevoke: (adminId: number) => void;
 }
 
-const rowClassName = "h-14 transition-colors hover:bg-background/80";
-const cellClassName = "px-4 py-2.5 md:px-5";
+const rowClassName = "h-16 transition-colors hover:bg-background/80";
+const cellClassName = "px-5 py-3 md:px-6";
 
 export function LocalAdminsTable({
   admins,
@@ -37,7 +37,7 @@ export function LocalAdminsTable({
       recordLabel={t("dashboard.superAdminPages.recordCount", {
         count: admins.length,
       })}
-      minWidth={1080}
+      minWidth={1000}
     >
       {admins.map((item, index) => {
         const name = isNepali ? item.nameNp : item.nameEn;
@@ -57,16 +57,16 @@ export function LocalAdminsTable({
 
         return (
           <tr key={item.id} className={rowClassName}>
-            <td className={`${cellClassName} whitespace-nowrap font-mono text-xs text-text-muted`}>
+            <td className={`${cellClassName} whitespace-nowrap font-mono text-sm text-text-muted`}>
               {index + 1}
             </td>
             <td className={`${cellClassName} whitespace-nowrap font-semibold`}>
-              <span className="mr-2.5 inline-flex size-8 items-center justify-center rounded-full bg-primary-light text-xs font-bold text-primary">
+              <span               className="mr-2.5 inline-flex size-9 items-center justify-center rounded-full bg-primary-light text-sm font-bold text-primary">
                 {item.nameEn.charAt(0)}
               </span>
               {name}
             </td>
-            <td className={`${cellClassName} whitespace-nowrap text-xs text-text-muted`}>
+            <td className={`${cellClassName} whitespace-nowrap text-sm text-text-muted`}>
               <span className="block font-mono">{item.email}</span>
               {item.contact && (
                 <span className="mt-1 block">{item.contact}</span>
@@ -89,7 +89,7 @@ export function LocalAdminsTable({
                 {t(`dashboard.superAdminPages.status.${item.status}`)}
               </span>
             </td>
-            <td className={`${cellClassName} whitespace-nowrap font-mono text-xs text-text-muted`}>
+            <td className={`${cellClassName} whitespace-nowrap font-mono text-sm text-text-muted`}>
               {date}
             </td>
             <td className={cellClassName}>

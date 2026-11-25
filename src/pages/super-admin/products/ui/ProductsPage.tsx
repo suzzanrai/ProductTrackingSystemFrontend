@@ -1,14 +1,21 @@
 import { useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { getApiErrorMessage } from "../../api/response";
+import { useMaterialCategories } from "../../categories/api/categories";
+import { ApiStatus } from "../../components/ApiStatus";
 import { DeleteDialog } from "../../components/DeleteDialog";
 import { ModuleToolbar } from "../../components/ModuleToolbar";
 import { Toast } from "../../components/Toast";
 import { useSuperAdminToast } from "../../components/useSuperAdminToast";
 import {
-  useSuperAdminMockData,
-  type MockProduct,
-} from "../../model/mock-data";
+  useCreateMaterial,
+  useDeleteMaterial,
+  useMaterials,
+  useUpdateMaterial,
+  type Material,
+} from "../api/materials";
+import { useUnits } from "../../unit/api/units";
 import {
   ProductFormDialog,
   type ProductValues,
@@ -17,70 +24,83 @@ import { ProductsTable } from "../components/ProductsTable";
 
 export function ProductsPage() {
   const { t, i18n } = useTranslation();
-  const products = useSuperAdminMockData((state) => state.products);
-  const categories = useSuperAdminMockData((state) => state.categories);
-  const units = useSuperAdminMockData((state) => state.units);
-  const setProducts = useSuperAdminMockData((state) => state.setProducts);
+  const productsQuery = useMaterials();
+  const categoriesQuery = useMaterialCategories();
+  const unitsQuery = useUnits();
+  const createProduct = useCreateMaterial();
+  const updateProduct = useUpdateMaterial();
+  const deleteProduct = useDeleteMaterial();
+  const categories = categoriesQuery.data ?? [];
+  const units = unitsQuery.data ?? [];
   const [search, setSearch] = useState("");
   const [formOpen, setFormOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<MockProduct | null>(null);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [editingProduct, setEditingProduct] = useState<Material | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const { message, showToast } = useSuperAdminToast();
   const isNepali = i18n.language.startsWith("ne");
 
   const filteredProducts = useMemo(() => {
     const query = search.trim().toLocaleLowerCase();
-    return products.filter((product) => {
-      const category =
-        categories.find((item) => item.id === product.categoryId)?.nameEn ?? "";
-      return [
+    return (productsQuery.data ?? []).filter((product) =>
+      [
+        product.code,
         product.nameEn,
         product.nameNp,
-        category,
-        product.descEn,
-        product.descNp,
-      ].some((value) => value.toLocaleLowerCase().includes(query));
-    });
-  }, [categories, products, search]);
+        product.materialCategoryNameEn,
+        product.materialCategoryNameNp,
+        product.description ?? "",
+      ].some((value) => value.toLocaleLowerCase().includes(query)),
+    );
+  }, [productsQuery.data, search]);
 
   function openCreate() {
     setEditingProduct(null);
     setFormOpen(true);
   }
 
-  function openEdit(product: MockProduct) {
-    setEditingProduct(product);
-    setFormOpen(true);
+  async function saveProduct(values: ProductValues) {
+    try {
+      if (editingProduct) {
+        await updateProduct.mutateAsync({ id: editingProduct.id, values });
+      } else {
+        await createProduct.mutateAsync(values);
+      }
+      setFormOpen(false);
+      showToast(t("dashboard.superAdminPages.saved"));
+    } catch (error) {
+      showToast(
+        getApiErrorMessage(error) ??
+          t("dashboard.superAdminPages.saveFailed"),
+      );
+    }
   }
 
-  function saveProduct(values: ProductValues) {
-    const nextProduct: MockProduct = {
-      ...values,
-      id: editingProduct?.id ?? Date.now(),
-      usedCount: editingProduct?.usedCount ?? 0,
-    };
-    setProducts((current) =>
-      editingProduct
-        ? current.map((item) =>
-            item.id === editingProduct.id ? nextProduct : item,
-          )
-        : [nextProduct, ...current],
-    );
-    setFormOpen(false);
-    showToast(t("dashboard.superAdminPages.saved"));
-  }
-
-  function confirmDelete() {
+  async function confirmDelete() {
     if (deleteId === null) return;
-    setProducts((current) => current.filter((item) => item.id !== deleteId));
-    setDeleteId(null);
-    showToast(t("dashboard.superAdminPages.deleted"));
+    try {
+      await deleteProduct.mutateAsync(deleteId);
+      setDeleteId(null);
+      showToast(t("dashboard.superAdminPages.deleted"));
+    } catch (error) {
+      setDeleteId(null);
+      showToast(
+        getApiErrorMessage(error) ??
+          t("dashboard.superAdminPages.deleteFailed"),
+      );
+    }
   }
+
+  const isLoading =
+    productsQuery.isLoading ||
+    categoriesQuery.isLoading ||
+    unitsQuery.isLoading;
+  const error =
+    productsQuery.error ?? categoriesQuery.error ?? unitsQuery.error;
 
   return (
-    <section className="space-y-6 md:space-y-7">
+    <section className="w-full min-w-0 space-y-6 md:space-y-7">
       <header className="space-y-1.5">
-        <h1 className="text-2xl font-bold leading-tight text-text md:text-[30px]">
+        <h1 className="text-2xl font-bold leading-tight text-text md:text-[34px]">
           {t("dashboard.moduleNames.superAdmin.products")}
         </h1>
         <p className="max-w-2xl text-sm leading-6 text-text-muted">
@@ -92,15 +112,30 @@ export function ProductsPage() {
         actionLabel={t("dashboard.superAdminPages.addProduct")}
         actionIcon={<Plus size={18} aria-hidden="true" />}
         onAction={openCreate}
+        actionDisabled={isLoading || Boolean(error)}
       />
-      <ProductsTable
-        products={filteredProducts}
-        categories={categories}
-        units={units}
-        isNepali={isNepali}
-        onEdit={openEdit}
-        onDelete={setDeleteId}
+      <ApiStatus
+        loading={isLoading}
+        error={error}
+        onRetry={() => {
+          void Promise.all([
+            productsQuery.refetch(),
+            categoriesQuery.refetch(),
+            unitsQuery.refetch(),
+          ]);
+        }}
       />
+      {!isLoading && !error && (
+        <ProductsTable
+          products={filteredProducts}
+          isNepali={isNepali}
+          onEdit={(product) => {
+            setEditingProduct(product);
+            setFormOpen(true);
+          }}
+          onDelete={setDeleteId}
+        />
+      )}
       {formOpen && (
         <ProductFormDialog
           key={editingProduct?.id ?? "new"}
@@ -114,7 +149,7 @@ export function ProductsPage() {
       {deleteId !== null && (
         <DeleteDialog
           onCancel={() => setDeleteId(null)}
-          onConfirm={confirmDelete}
+          onConfirm={() => void confirmDelete()}
         />
       )}
       <Toast message={message} />
