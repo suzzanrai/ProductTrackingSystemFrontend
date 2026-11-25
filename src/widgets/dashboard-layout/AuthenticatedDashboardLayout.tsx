@@ -5,14 +5,14 @@ import {
   useRouteContext,
 } from "@tanstack/react-router";
 import { DashboardLayout } from "./DashboardLayout";
-import { collectorDashboard } from "@pages/dashboards/collector/model/navigation";
-import { consumerDashboard } from "@pages/dashboards/consumer/model/navigation";
-import { factoryDashboard } from "@pages/dashboards/factory/model/navigation";
-import { farmerDashboard } from "@pages/dashboards/farmer/model/navigation";
-import { localAdminDashboard } from "@pages/dashboards/local-admin/model/navigation";
-import { retailerDashboard } from "@pages/dashboards/retailer/model/navigation";
-import { superAdminDashboard } from "@pages/dashboards/super-admin/model/navigation";
-import { wholesalerDashboard } from "@pages/dashboards/wholesaler/model/navigation";
+import { collectorDashboard } from "@pages/collector/model/navigation";
+import { consumerDashboard } from "@pages/consumer/model/navigation";
+import { factoryDashboard } from "@pages/factory/model/navigation";
+import { farmerDashboard } from "@pages/farmer/model/navigation";
+import { localAdminDashboard } from "@pages/local-admin/model/navigation";
+import { retailerDashboard } from "@pages/retailer/model/navigation";
+import { superAdminDashboard } from "@pages/super-admin/model/navigation";
+import { wholesalerDashboard } from "@pages/wholesaler/model/navigation";
 import type { DashboardOverviewConfig } from "@widgets/dashboard-overview";
 
 const dashboards: readonly DashboardOverviewConfig[] = [

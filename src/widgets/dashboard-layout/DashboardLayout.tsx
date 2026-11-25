@@ -76,6 +76,7 @@ export function DashboardLayout({
     label: t(`dashboard.moduleNames.${config.roleKey}.${module.id}`),
     route: config.moduleRoute,
   }));
+  const isSuperAdmin = config.roleKey === "superAdmin";
   const activeModule = navigation.find((item) =>
     pathname.endsWith(`/${item.id}`),
   );
@@ -221,25 +222,40 @@ export function DashboardLayout({
 
         <nav
           aria-label={t("dashboard.workspaceNavigation")}
-          className="flex-1 overflow-y-auto px-3 py-4"
+          className={`flex-1 overflow-y-auto ${
+            isSuperAdmin ? "space-y-1.5 p-4" : "px-3 py-4"
+          }`}
         >
-          <p className="px-4 pb-2 pt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted">
-            {t("dashboard.core")}
-          </p>
+          {!isSuperAdmin && (
+            <p className="px-4 pb-2 pt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted">
+              {t("dashboard.core")}
+            </p>
+          )}
           <Link
             to={config.homeTo}
             activeOptions={{ exact: true }}
+            activeProps={
+              isSuperAdmin
+                ? { className: "bg-primary-light text-primary" }
+                : undefined
+            }
             onClick={closeMobileNavigation}
-            className="flex min-h-9 items-center gap-2.5 rounded-control border-l-2 border-primary bg-primary-light px-3 text-xs font-semibold text-primary"
+            className={
+              isSuperAdmin
+                ? "flex h-12 w-full items-center gap-3 rounded-lg px-3 text-left text-base font-medium text-text-muted transition-colors hover:bg-background hover:text-text"
+                : "flex min-h-9 items-center gap-2.5 rounded-control border-l-2 border-primary bg-primary-light px-3 text-xs font-semibold text-primary"
+            }
           >
-            <LayoutDashboard size={17} aria-hidden="true" />
+            <LayoutDashboard size={isSuperAdmin ? 24 : 17} aria-hidden="true" />
             {t("dashboard.dashboard")}
           </Link>
 
-          <p className="mb-2 mt-6 px-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted">
-            {t("dashboard.modules")}
-          </p>
-          <ul className="space-y-1">
+          {!isSuperAdmin && (
+            <p className="mb-2 mt-6 px-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted">
+              {t("dashboard.modules")}
+            </p>
+          )}
+          <ul className={isSuperAdmin ? "space-y-1.5" : "space-y-1"}>
             {navigation.map(({ id, icon: Icon, label, route }) => (
               <li key={id}>
                 <Link
@@ -248,12 +264,18 @@ export function DashboardLayout({
                   activeOptions={{ exact: true }}
                   activeProps={{
                     className:
-                      "border-l-2 border-primary bg-primary-light font-semibold text-primary",
+                      isSuperAdmin
+                        ? "bg-primary-light text-primary"
+                        : "border-l-2 border-primary bg-primary-light font-semibold text-primary",
                   }}
                   onClick={closeMobileNavigation}
-                  className="flex min-h-9 w-full items-center gap-2.5 rounded-control border-l-2 border-transparent px-3 text-left text-xs font-medium text-text-muted transition-colors hover:bg-background hover:text-text"
+                  className={
+                    isSuperAdmin
+                      ? "flex h-12 w-full items-center gap-3 rounded-lg px-3 text-left text-base font-medium text-text-muted transition-colors hover:bg-background hover:text-text"
+                      : "flex min-h-9 w-full items-center gap-2.5 rounded-control border-l-2 border-transparent px-3 text-left text-xs font-medium text-text-muted transition-colors hover:bg-background hover:text-text"
+                  }
                 >
-                  <Icon size={17} aria-hidden="true" />
+                  <Icon size={isSuperAdmin ? 24 : 17} aria-hidden="true" />
                   <span className="flex-1">{label}</span>
                 </Link>
               </li>

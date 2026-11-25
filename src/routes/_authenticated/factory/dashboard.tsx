@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { FactoryDashboardPage } from "@pages/dashboards/factory";
+import { FactoryDashboardPage } from "@pages/factory";
 import { requireBackendRole } from "@features/auth/model/route-access";
 
 export const Route = createFileRoute("/_authenticated/factory/dashboard")({

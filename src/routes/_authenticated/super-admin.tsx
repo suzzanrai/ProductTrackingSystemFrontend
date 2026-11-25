@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SuperAdminRouteLayout } from "@pages/dashboards/super-admin/ui/SuperAdminRouteLayout";
+import { SuperAdminRouteLayout } from "@pages/super-admin/SuperAdminRouteLayout";
 import { requireBackendRole } from "@features/auth/model/route-access";
 
 export const Route = createFileRoute("/_authenticated/super-admin")({
