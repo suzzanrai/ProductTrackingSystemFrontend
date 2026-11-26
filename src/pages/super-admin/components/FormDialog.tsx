@@ -6,7 +6,7 @@ import { DashboardButton } from "@shared/ui";
 interface FormDialogProps {
   title: string;
   submitLabel: string;
-  maxWidth?: "560px" | "760px";
+  maxWidth?: "560px" | "760px" | "900px";
   onClose: () => void;
   onSubmit: FormEventHandler<HTMLFormElement>;
   children: (markDirty: () => void) => ReactNode;
@@ -43,7 +43,7 @@ export function FormDialog({
           className="flex max-h-[90vh] w-full flex-col overflow-hidden rounded-card border border-border bg-surface"
           style={{ maxWidth }}
         >
-          <header className="flex h-16 shrink-0 items-center justify-between border-b border-border px-6">
+          <header className="flex h-14 shrink-0 items-center justify-between border-b border-border px-5">
             <h2
               id="super-admin-form-title"
               className="text-xl font-semibold text-text"
@@ -59,9 +59,9 @@ export function FormDialog({
               <X size={20} aria-hidden="true" />
             </button>
           </header>
-          <form onSubmit={onSubmit} className="space-y-6 overflow-y-auto p-6">
+          <form onSubmit={onSubmit} className="space-y-4 overflow-y-auto p-5">
             {children(() => setDirty(true))}
-            <footer className="flex flex-col-reverse gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-end">
+            <footer className="flex flex-col-reverse gap-3 border-t border-border pt-3 sm:flex-row sm:items-center sm:justify-end">
               <DashboardButton
                 variant="secondary"
                 type="button"

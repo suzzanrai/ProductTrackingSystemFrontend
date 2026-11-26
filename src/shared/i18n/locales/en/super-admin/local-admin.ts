@@ -1,12 +1,13 @@
 export const enSuperAdminLocalAdmin = {
   adminsDescription:
-    "Manage local administrative officers and send invite links.",
+    "Create local administrator accounts and manage the administrator list.",
   officerName: "Officer name",
   emailContact: "Email / contact",
   region: "Region / jurisdiction",
   statusLabel: "Status",
   invitedDate: "Invited date",
   sendInvitation: "Send invitation link",
+  addLocalAdmin: "Add local administrator",
   resendInvite: "Resend invite",
   revoke: "Revoke",
   inviteSent: "Invitation sent",

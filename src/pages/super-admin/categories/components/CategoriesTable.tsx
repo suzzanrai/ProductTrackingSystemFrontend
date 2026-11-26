@@ -26,6 +26,9 @@ export function CategoriesTable({
         t("dashboard.superAdminPages.nameNp"),
         t("dashboard.superAdminPages.nameEn"),
         t("dashboard.superAdminPages.categoryCode"),
+        t("dashboard.superAdminPages.parentCategory"),
+        t("dashboard.superAdminPages.description"),
+        t("dashboard.superAdminPages.createdAt"),
         t("dashboard.superAdminPages.action"),
       ]}
       empty={!categories.length}
@@ -33,7 +36,7 @@ export function CategoriesTable({
       recordLabel={t("dashboard.superAdminPages.recordCount", {
         count: categories.length,
       })}
-      minWidth={640}
+      minWidth={980}
     >
       {categories.map((item, index) => (
         <tr key={item.id} className={rowClassName}>
@@ -47,8 +50,11 @@ export function CategoriesTable({
             {item.nameEn}
           </td>
           <td className={`${cellClassName} whitespace-nowrap font-mono text-sm`}>
-            {item.code}
+            {item.code || "—"}
           </td>
+          <td className={`${cellClassName} whitespace-nowrap text-text-muted`}>{item.parentCategoryNameEn || "—"}</td>
+          <td className={`${cellClassName} max-w-xs truncate text-text-muted`}>{item.description || "—"}</td>
+          <td className={`${cellClassName} whitespace-nowrap text-sm text-text-muted`}>{item.createdAt ? new Date(item.createdAt).toLocaleDateString() : "—"}</td>
           <td className={cellClassName}>
             <RowActions
               editLabel={t("dashboard.superAdminPages.edit")}

@@ -1,4 +1,4 @@
-import { Package, Ruler, Shapes, Users } from "lucide-react";
+import { Package, Ruler, Shapes, Users, Scale } from "lucide-react";
 import type { DashboardOverviewConfig } from "@widgets/dashboard-overview";
 
 export const superAdminDashboard: DashboardOverviewConfig = {
@@ -12,6 +12,7 @@ export const superAdminDashboard: DashboardOverviewConfig = {
     { id: "products", icon: Package },
     { id: "categories", icon: Shapes },
     { id: "units", icon: Ruler },
+    { id: "unitCategories", icon: Scale },
     { id: "localAdmin", icon: Users },
   ],
 };

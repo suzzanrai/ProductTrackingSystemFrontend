@@ -3,6 +3,7 @@ import { CategoriesPage } from "./categories/ui/CategoriesPage";
 import { LocalAdminsPage } from "./local-admin/ui/LocalAdminsPage";
 import { ProductsPage } from "./products/ui/ProductsPage";
 import { UnitsPage } from "./unit/ui/UnitsPage";
+import { UnitCategoriesPage } from "./unit/ui/UnitCategoriesPage";
 
 export function SuperAdminModulePage() {
   const moduleId = useRouterState({
@@ -13,6 +14,8 @@ export function SuperAdminModulePage() {
       return <CategoriesPage />;
     case "units":
       return <UnitsPage />;
+    case "unitCategories":
+      return <UnitCategoriesPage />;
     case "localAdmin":
       return <LocalAdminsPage />;
     case "products":

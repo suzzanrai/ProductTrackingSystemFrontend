@@ -43,7 +43,6 @@ export function ProductsPage() {
     const query = search.trim().toLocaleLowerCase();
     return (productsQuery.data ?? []).filter((product) =>
       [
-        product.code,
         product.nameEn,
         product.nameNp,
         product.materialCategoryNameEn,

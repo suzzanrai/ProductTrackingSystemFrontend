@@ -25,12 +25,12 @@ export function ProductsTable({
     <DataTable
       headers={[
         t("dashboard.superAdminPages.no"),
-        t("dashboard.superAdminPages.productCode"),
         t("dashboard.superAdminPages.nameNp"),
         t("dashboard.superAdminPages.nameEn"),
         t("dashboard.superAdminPages.category"),
         t("dashboard.superAdminPages.units"),
         t("dashboard.superAdminPages.description"),
+        t("dashboard.superAdminPages.createdAt"),
         t("dashboard.superAdminPages.action"),
       ]}
       empty={!products.length}
@@ -44,9 +44,6 @@ export function ProductsTable({
         <tr key={item.id} className={rowClassName}>
           <td className={`${cellClassName} whitespace-nowrap font-mono text-sm text-text-muted`}>
             {index + 1}
-          </td>
-          <td className={`${cellClassName} whitespace-nowrap font-mono text-sm`}>
-            {item.code}
           </td>
           <td className={`${cellClassName} whitespace-nowrap font-semibold`}>
             {item.nameNp}
@@ -79,6 +76,7 @@ export function ProductsTable({
           <td className={`${cellClassName} max-w-xs truncate text-text-muted`}>
             {item.description ?? "—"}
           </td>
+          <td className={`${cellClassName} whitespace-nowrap text-sm text-text-muted`}>{item.createdAt ? new Date(item.createdAt).toLocaleDateString() : "—"}</td>
           <td className={cellClassName}>
             <RowActions
               editLabel={t("dashboard.superAdminPages.edit")}

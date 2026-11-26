@@ -7,6 +7,7 @@ export interface UnitCategory {
   nameEn: string;
   nameNp: string;
   description: string | null;
+  createdAt?: string;
 }
 
 export interface MaterialUnit {
@@ -17,6 +18,7 @@ export interface MaterialUnit {
   unitCategoryId: string;
   unitCategoryNameEn?: string;
   unitCategoryNameNp?: string;
+  createdAt?: string;
 }
 
 export interface MaterialUnitWrite {

@@ -49,6 +49,7 @@ http.interceptors.response.use(
     const bodyError = isRecord(body.error) ? body.error : {};
     const message =
       (typeof bodyError.message === "string" && bodyError.message) ||
+      (typeof bodyError.description === "string" && bodyError.description) ||
       (typeof body.message === "string" && body.message) ||
       error.message;
     const details = getValidationDetails(bodyError.details);

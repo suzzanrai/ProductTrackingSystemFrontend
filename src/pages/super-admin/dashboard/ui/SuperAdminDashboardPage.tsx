@@ -3,7 +3,6 @@ import { ApiStatus } from "../../components/ApiStatus";
 import { useMaterialCategories } from "../../categories/api/categories";
 import { useMaterials } from "../../products/api/materials";
 import { useUnits } from "../../unit/api/units";
-import { ProductsUsageList } from "../components/ProductsUsageList";
 import { SuperAdminStats } from "../components/SuperAdminStats";
 
 export function SuperAdminDashboardPage() {
@@ -50,7 +49,6 @@ export function SuperAdminDashboardPage() {
             categoryCount={categoriesQuery.data?.length ?? 0}
             unitCount={unitsQuery.data?.length ?? 0}
           />
-          <ProductsUsageList products={[]} />
         </>
       )}
     </section>

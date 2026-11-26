@@ -53,14 +53,14 @@ export function ProductUnitSelector({
   }
 
   return (
-    <fieldset className="space-y-3">
-      <legend className="text-sm font-medium text-text-muted">
+    <fieldset className="space-y-3 rounded-card border border-border p-4">
+      <legend className="px-1 text-sm font-semibold text-text">
         {t("dashboard.superAdminPages.units")} *
       </legend>
       <p className="text-xs text-text-muted">
         {t("dashboard.superAdminPages.multipleUnits")}
       </p>
-      <div className="flex flex-wrap gap-2.5">
+      <div className="flex flex-wrap gap-2">
         {units.map((unit) => {
           const selected = assignments.some((item) => item.unitId === unit.id);
           const name = isNepali ? unit.nameNp : unit.nameEn;
@@ -82,7 +82,7 @@ export function ProductUnitSelector({
         })}
       </div>
       {assignments.length > 0 && (
-        <div className="space-y-3 rounded-control border border-border p-3">
+        <div className="grid gap-3 rounded-control bg-background/50 p-3 lg:grid-cols-2">
           {assignments.map((assignment) => {
             const unit = units.find((item) => item.id === assignment.unitId);
             if (!unit) return null;
@@ -92,7 +92,7 @@ export function ProductUnitSelector({
             return (
               <div
                 key={assignment.unitId}
-                className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+                className="grid content-start gap-3 rounded-control border border-border bg-surface p-3"
               >
                 <label className="flex items-center gap-2 text-sm text-text">
                   <input

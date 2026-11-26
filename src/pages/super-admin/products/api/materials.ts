@@ -16,7 +16,6 @@ export interface MaterialUnitDetail {
 
 export interface Material {
   id: string;
-  code: string;
   nameEn: string;
   nameNp: string;
   description: string | null;
@@ -38,15 +37,10 @@ export interface MaterialUnitWrite {
 }
 
 export interface MaterialWrite {
-  code: string;
   nameEn: string;
   nameNp: string;
   materialCategoryId: string;
-  isBatchTracked: boolean;
-  isSerialTracked: boolean;
-  minimumStockLevel: number;
-  reorderLevel: number;
-  description: string;
+  description: string | null;
   units: MaterialUnitWrite[];
 }
 

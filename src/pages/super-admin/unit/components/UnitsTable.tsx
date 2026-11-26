@@ -29,6 +29,7 @@ export function UnitsTable({
         t("dashboard.superAdminPages.fullNameEn"),
         t("dashboard.superAdminPages.abbreviation"),
         t("dashboard.superAdminPages.unitType"),
+        t("dashboard.superAdminPages.createdAt"),
         t("dashboard.superAdminPages.action"),
       ]}
       empty={!units.length}
@@ -36,7 +37,7 @@ export function UnitsTable({
       recordLabel={t("dashboard.superAdminPages.recordCount", {
         count: units.length,
       })}
-      minWidth={720}
+      minWidth={880}
     >
       {units.map((item, index) => (
         <tr key={item.id} className={rowClassName}>
@@ -59,6 +60,7 @@ export function UnitsTable({
               ? item.unitCategoryNameNp ?? "—"
               : item.unitCategoryNameEn ?? "—"}
           </td>
+          <td className={`${cellClassName} whitespace-nowrap text-sm text-text-muted`}>{item.createdAt ? new Date(item.createdAt).toLocaleDateString() : "—"}</td>
           <td className={cellClassName}>
             <RowActions
               editLabel={t("dashboard.superAdminPages.edit")}

@@ -7,34 +7,39 @@ import type { MaterialCategory } from "../api/categories";
 export interface CategoryValues {
   nameEn: string;
   nameNp: string;
-  code: string;
-  description: string;
+  code: string | null;
+  description: string | null;
+  parentCategoryId: string | null;
 }
 
 interface CategoryFormDialogProps {
   category: MaterialCategory | null;
   onClose: () => void;
   onSave: (values: CategoryValues) => void;
+  categories: MaterialCategory[];
 }
 
 export function CategoryFormDialog({
   category,
   onClose,
   onSave,
+  categories,
 }: CategoryFormDialogProps) {
   const { t } = useTranslation();
   const [nameEn, setNameEn] = useState(category?.nameEn ?? "");
   const [nameNp, setNameNp] = useState(category?.nameNp ?? "");
   const [code, setCode] = useState(category?.code ?? "");
   const [description, setDescription] = useState(category?.description ?? "");
+  const [parentCategoryId, setParentCategoryId] = useState(category?.parentCategoryId ?? "");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     onSave({
       nameEn: nameEn.trim(),
       nameNp: nameNp.trim(),
-      code: code.trim(),
-      description: description.trim(),
+      code: code.trim() || null,
+      description: description.trim() || null,
+      parentCategoryId: parentCategoryId || null,
     });
   }
 
@@ -71,6 +76,13 @@ export function CategoryFormDialog({
             onChange={setCode}
             onDirty={markDirty}
           />
+          <label className="block space-y-1.5">
+            <span className="text-sm font-medium text-text-muted">{t("dashboard.superAdminPages.parentCategory")}</span>
+            <select value={parentCategoryId} onChange={(event) => { markDirty(); setParentCategoryId(event.target.value); }} className="w-full rounded-control border border-border bg-surface px-3 py-2.5 text-text">
+              <option value="">{t("dashboard.superAdminPages.noParentCategory")}</option>
+              {categories.filter((item) => item.id !== category?.id).map((item) => <option key={item.id} value={item.id}>{item.nameEn}</option>)}
+            </select>
+          </label>
           <label className="block space-y-1.5">
             <span className="text-sm font-medium text-text-muted">
               {t("dashboard.superAdminPages.description")}

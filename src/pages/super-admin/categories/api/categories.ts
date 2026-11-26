@@ -6,7 +6,7 @@ export interface MaterialCategory {
   id: string;
   nameEn: string;
   nameNp: string;
-  code: string;
+  code: string | null;
   description: string | null;
   parentCategoryId: string | null;
   parentCategoryNameEn?: string | null;
@@ -17,8 +17,8 @@ export interface MaterialCategory {
 export interface MaterialCategoryWrite {
   nameEn: string;
   nameNp: string;
-  code: string;
-  description: string;
+  code: string | null;
+  description: string | null;
   parentCategoryId: string | null;
 }
 

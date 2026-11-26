@@ -54,14 +54,10 @@ export function CategoriesPage() {
           id: editingCategory.id,
           values: {
             ...values,
-            parentCategoryId: editingCategory.parentCategoryId,
           },
         });
       } else {
-        await createCategory.mutateAsync({
-          ...values,
-          parentCategoryId: null,
-        });
+        await createCategory.mutateAsync(values);
       }
       setFormOpen(false);
       showToast(t("dashboard.superAdminPages.saved"));
@@ -124,6 +120,7 @@ export function CategoriesPage() {
         <CategoryFormDialog
           key={editingCategory?.id ?? "new"}
           category={editingCategory}
+          categories={categoriesQuery.data ?? []}
           onClose={() => setFormOpen(false)}
           onSave={saveCategory}
         />

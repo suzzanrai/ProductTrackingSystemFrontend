@@ -1,5 +1,6 @@
 interface BackendError {
   message?: string;
+  description?: string;
 }
 
 export interface BackendEnvelope<T> {
@@ -14,7 +15,7 @@ export function unwrapBackendData<T>(response: BackendEnvelope<T>): T {
     const message =
       typeof response.error === "string"
         ? response.error
-        : response.error?.message ?? response.message;
+        : response.error?.description ?? response.error?.message ?? response.message;
     throw new Error(message || "The request was not successful.");
   }
 
