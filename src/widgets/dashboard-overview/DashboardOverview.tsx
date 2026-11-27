@@ -6,6 +6,7 @@ import {
   type DashboardNavigationItem,
   type DashboardModuleRoute,
 } from "@widgets/dashboard-layout";
+import { DashboardCard } from "@shared/ui";
 
 export interface DashboardOverviewConfig {
   homeTo: DashboardPath;
@@ -52,7 +53,7 @@ export function DashboardOverview({ config }: DashboardOverviewProps) {
           </span>
         </section>
 
-        <section className="overflow-hidden rounded-card border bg-surface">
+        <DashboardCard className="overflow-hidden">
           <div className="flex items-start gap-4 border-b px-5 py-5 md:px-6">
             <span className="flex size-11 shrink-0 items-center justify-center rounded-control bg-primary-light text-primary">
               <BadgeCheck size={22} aria-hidden="true" />
@@ -90,9 +91,9 @@ export function DashboardOverview({ config }: DashboardOverviewProps) {
               </Link>
             ))}
           </div>
-        </section>
+        </DashboardCard>
 
-        <section className="flex flex-col gap-4 rounded-card border bg-surface p-5 sm:flex-row sm:items-center sm:justify-between md:px-6">
+        <DashboardCard className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between md:px-6">
           <div className="flex items-start gap-3">
             <Clock3
               className="mt-0.5 size-5 shrink-0 text-text-muted"
@@ -110,7 +111,7 @@ export function DashboardOverview({ config }: DashboardOverviewProps) {
           <span className="w-fit rounded-full border bg-background px-3 py-1 text-[11px] font-medium text-text-muted">
             {t("dashboard.comingSoon")}
           </span>
-        </section>
+        </DashboardCard>
       </div>
   );
 }

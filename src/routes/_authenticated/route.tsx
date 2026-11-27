@@ -1,14 +1,11 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { clearAuthSession, getAuthToken } from "@shared/lib";
+import { getAuthenticatedUser } from "@features/auth/api/get-authenticated-user";
 import { getRoleFromToken } from "@features/auth/model/token-role";
-import {
-  previewAuthenticatedUser,
-  unavailableAuthenticatedUser,
-} from "@features/auth/model/authenticated-user";
 import { AuthenticatedDashboardLayout } from "@widgets/dashboard-layout";
 
 export const Route = createFileRoute("/_authenticated")({
-  beforeLoad: () => {
+  beforeLoad: async () => {
     const token = getAuthToken();
     if (!token) {
       throw redirect({ to: "/login" });
@@ -19,11 +16,8 @@ export const Route = createFileRoute("/_authenticated")({
       throw redirect({ to: "/login" });
     }
 
-    // Replace this preview data with the authenticated-user API response when available.
     return {
-      user: import.meta.env.DEV
-        ? previewAuthenticatedUser
-        : unavailableAuthenticatedUser,
+      user: await getAuthenticatedUser(),
     };
   },
   component: AuthenticatedDashboardLayout,
