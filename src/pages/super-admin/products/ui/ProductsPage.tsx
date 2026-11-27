@@ -99,7 +99,7 @@ export function ProductsPage() {
   return (
     <section className="w-full min-w-0 space-y-6 md:space-y-7">
       <header className="space-y-1.5">
-        <h1 className="text-2xl font-bold leading-tight text-text md:text-[34px]">
+        <h1 className="text-2xl font-bold leading-tight text-text">
           {t("dashboard.moduleNames.superAdmin.products")}
         </h1>
         <p className="max-w-2xl text-sm leading-6 text-text-muted">

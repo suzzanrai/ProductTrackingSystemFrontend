@@ -23,7 +23,7 @@ export function SuperAdminDashboardPage() {
   return (
     <section className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold leading-tight text-text md:text-4xl">
+        <h1 className="text-2xl font-bold leading-tight text-text">
           {t("dashboard.dashboard")}
         </h1>
         <p className="mt-1 text-sm text-text-muted">

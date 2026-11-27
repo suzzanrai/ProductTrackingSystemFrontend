@@ -40,7 +40,7 @@ export function LocalAdminsPage() {
   }
 
   return <section className="w-full min-w-0 space-y-6 md:space-y-7">
-    <header className="space-y-1.5"><h1 className="text-2xl font-bold leading-tight text-text md:text-[34px]">{t("dashboard.moduleNames.superAdmin.localAdmin")}</h1><p className="max-w-2xl text-sm leading-6 text-text-muted">{t("dashboard.superAdminPages.adminsDescription")}</p></header>
+    <header className="space-y-1.5"><h1 className="text-2xl font-bold leading-tight text-text">{t("dashboard.moduleNames.superAdmin.localAdmin")}</h1><p className="max-w-2xl text-sm leading-6 text-text-muted">{t("dashboard.superAdminPages.adminsDescription")}</p></header>
     <ModuleToolbar onSearch={setSearch} actionLabel={t("dashboard.superAdminPages.addLocalAdmin")} actionIcon={<UserPlus size={18} aria-hidden="true" />} onAction={() => setInviteOpen(true)} actionDisabled={Boolean(adminsQuery.error)} />
     <ApiStatus loading={adminsQuery.isLoading} error={adminsQuery.error} onRetry={() => void adminsQuery.refetch()} />
     {!adminsQuery.isLoading && !adminsQuery.error && <>
